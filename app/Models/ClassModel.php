@@ -31,4 +31,15 @@ class ClassModel extends Model
     {
         return $this->hasMany(Student::class, 'class_id');
     }
+
+    public function cbtQuestions()
+    {
+        return $this->hasMany(CbtQuestion::class, 'classes_id');
+    }
+
+    //Classes has several student results
+    public function studentResults()
+    {
+        return $this->hasMany(StudentResult::class, 'class_id');
+    }
 }

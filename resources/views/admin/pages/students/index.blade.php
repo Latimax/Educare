@@ -31,7 +31,7 @@
 
         <div class="card basic-data-table">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="card-title mb-0">All Students</h5>
+                <h5 class="card-title mb-0">{{ $className ??  "All Students" }}</h5>
                 <h5 class="card-title mb-0">
                     <a href="{{ route('admin.students.create') }}"
                         class="btn btn-outline-primary-600 radius-8 px-20 py-11 d-flex align-items-center gap-2">

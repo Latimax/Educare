@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\Admin\SchoolSessionController;
 use App\Models\Admin;
 use App\Models\SchoolInfo;
 use App\Models\User;
@@ -28,6 +29,9 @@ class DatabaseSeeder extends Seeder
         // Create different levels
         //  $this->call(LevelSeeder::class);
 
+        //Create School Sessions
+        //$this->call(SchoolSessions::class);
+
         //Create School Information
         // $this->call(SchoolInfoSeeder::class);
 
@@ -47,7 +51,10 @@ class DatabaseSeeder extends Seeder
         //$this->call(ResultCommentSeeder::class);
 
         // Create Cbt Configurations
-        $this->call(CbtConfigSeeder::class);
+        //$this->call(CbtConfigSeeder::class);
+
+
+
 
     }
 }

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Classes | All Classes')
+@section('title', 'CBT Questions | All Questions for {{ $subject_name }}')
 
 @php
     $imgpath = 'storage/front/images/';
@@ -16,7 +16,7 @@
 @section('content')
     <div class="dashboard-main-body">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-            <h6 class="fw-semibold mb-0">Classes</h6>
+            <h6 class="fw-semibold mb-0">Cbt Questions</h6>
             <ul class="d-flex align-items-center gap-2">
                 <li class="fw-medium">
                     <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
@@ -25,19 +25,23 @@
                     </a>
                 </li>
                 <li>-</li>
-                <li class="fw-medium"> Classes</li>
+                <li class="fw-medium"> CBT Questions</li>
             </ul>
         </div>
 
         <div class="card basic-data-table">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="card-title mb-0">All Classes</h5>
-                <h5 class="card-title mb-0">
-                    <a href="{{ route('admin.students.index') }}"
-                        class="btn btn-outline-primary-600 radius-8 px-20 py-11 d-flex align-items-center gap-2">
-                        <iconify-icon icon="icons8:left-round" class="text-xl"></iconify-icon> All Students
+                <h5 class="card-title mb-0">{{ $subject_name }}</h5>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('admin.cbtquestions.index') }}"
+                        class="btn btn-outline-secondary radius-8 px-20 py-11 d-flex align-items-center gap-2">
+                        <iconify-icon icon="ic:round-arrow-back" class="text-xl"></iconify-icon> Back
                     </a>
-                </h5>
+                    <a href="{{ route('admin.cbtquestions.subjects.create', ['subjectId' => $subjectId, 'classId' => $classId]) }}"
+                        class="btn btn-outline-primary-600 radius-8 px-20 py-11 d-flex align-items-center gap-2">
+                        <iconify-icon icon="ei:plus" class="text-xl"></iconify-icon> Add New
+                    </a>
+                </div>
             </div>
 
             @if (session('success'))
@@ -58,47 +62,48 @@
                     <table class="table bordered-table mb-0" id="dataTable" data-page-length='10'>
                         <thead>
                             <tr>
-                                <th scope="col">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input" type="checkbox">
-                                        <label class="form-check-label"> S.L </label>
-                                    </div>
-                                </th>
-                                <th scope="col">Class Name</th>
-                                <th scope="col">Class Teacher</th>
-                                <th scope="col">Action</th>
+                                <th>ID</th>
+                                <th>Description</th>
+                                <th>Option A</th>
+                                <th>Option B</th>
+                                <th>Option C</th>
+                                <th>Option D</th>
+                                <th>Answer</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($classes as $index => $class)
+                            @foreach ($questions as $question)
                                 <tr>
                                     <td>
                                         <div class="form-check style-check d-flex align-items-center">
-                                            <input class="form-check-input" type="checkbox">
-                                            <label class="form-check-label">{{ $index + 1 }}</label>
+                                            <input class="form-check    -input" type="checkbox"
+                                                id="question_{{ $question->id }}">
+                                            <label class="form-check-label"
+                                                for="question_{{ $question->id }}">{{ $question->id }}</label>
                                         </div>
                                     </td>
-                                    <td><a href="{{ $class->class_name }}"
-                                            class="text-primary-600">{{ $class->class_name }}</a></td>
-
-                                    @if ($class->staff)
-                                        <td>{{ $class->staff->fullname }}</td>
-                                    @else
-                                        <td class="text-danger-600">N/A</td>
-                                    @endif
-                                    <td class="d-flex gap-2 align-items-center">
-                                        {{-- Edit Button --}}
-                                        <a href="{{ route('admin.students.filter', ['id' => $class->id ]) }}"
-                                            class="btn btn-outline-primary-600 radius-8 text-primary-600 d-inline-flex align-items-center justify-content-center gap-1">
-                                            <iconify-icon icon="akar-icons:eye" class="text-xl"></iconify-icon>
-                                            <span>
-                                                View
-                                                {{ Str::contains($class->class_name, ['Nursery', 'Primary']) ? 'Pupils' : 'Students' }}
-                                                [{{ count($class->students) }}]
-                                            </span>
-
-                                        </a>
-
+                                    <td>{{ \Illuminate\Support\Str::limit(strip_tags($question->description), 10, '...') ?? \Illuminate\Support\Str::limit(strip_tags($question->question), 2, '...') }}
+                                    </td>
+                                    <td>{{ \Illuminate\Support\Str::limit(strip_tags($question->option_a), 5, '...') }}
+                                    </td>
+                                    <td>{{ \Illuminate\Support\Str::limit(strip_tags($question->option_b), 5, '...') }}
+                                    </td>
+                                    <td>{{ \Illuminate\Support\Str::limit(strip_tags($question->option_c), 5, '...') }}
+                                    </td>
+                                    <td>{{ \Illuminate\Support\Str::limit(strip_tags($question->option_d), 5, '...') }}
+                                    </td>
+                                    <td>{{ htmlspecialchars($question->answer) }}</td>
+                                    <td>
+                                        <!-- Example actions: Edit/Delete -->
+                                        <a href="{{ route('admin.cbtquestions.edit', $question->id) }}"
+                                            class="btn btn-sm btn-primary">Edit</a>
+                                        <form action="{{ route('admin.cbtquestions.destroy', $question->id) }}"
+                                            method="POST" class="d-inline form-delete">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -121,14 +126,12 @@
     <script src="{{ asset('adminpage/assets/js/lib/pdfmake.min.js') }}"></script>
     <script src="{{ asset('adminpage/assets/js/lib/vfs_fonts.js') }}"></script>
 
-
     <script>
         $('.remove-button').on('click', function() {
             $(this).closest('.alert').addClass('d-none');
         });
 
         let table = new DataTable('#dataTable', {
-            sorting: false,
             dom: 'Bfrtip',
             buttons: [
                 'copy',

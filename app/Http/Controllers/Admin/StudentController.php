@@ -41,6 +41,17 @@ class StudentController extends Controller
         return view('admin.pages.students.classes', compact('schoolinfo', 'classes'));
     }
 
+    public function students($id = null)
+    {
+
+        $schoolinfo = SchoolInfo::first();
+        $students = $id ? Student::where("class_id", $id)->get() : Student::all();
+
+        $className  = ClassModel::find($id)->class_name;
+
+        return view('admin.pages.students.index', compact('schoolinfo', 'students', 'className'));
+
+    }
     public function showChildren($id = null)
     {
         // If an ID is provided, filter children by that parent ID

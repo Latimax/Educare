@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
+use function PHPUnit\Framework\isEmpty;
+
 class ExamQuestionController extends Controller
 {
     /**
@@ -60,6 +62,11 @@ class ExamQuestionController extends Controller
         if ($level) {
             $subjects = Subject::where('level_id', $level)->orderBy('level_id', 'ASC')->orderBy('subject_name', 'ASC')->get();
 
+
+
+            if(count($subjects) < 1){
+                return redirect()->back()->with('success', 'Please add subjects for the designated class');
+            }
             return view('admin.pages.examquestions.subjects', compact('subjects', 'schoolinfo', 'classId'));
         } else {
 
@@ -124,15 +131,7 @@ class ExamQuestionController extends Controller
 
     public function create()
     {
-        $schoolinfo = SchoolInfo::first();
 
-        // Fetch levels for the dropdown
-        $levels = Level::all();
-
-        //Fetch staff for the dropdown
-        $staffs = Staff::all();
-
-        return view('admin.pages.subjects.create', compact('schoolinfo', 'levels', 'staffs'));
     }
     public function uploadImage(Request $request)
     {
@@ -240,18 +239,7 @@ class ExamQuestionController extends Controller
      */
     public function show(Subject $subject)
     {
-        $schoolinfo = SchoolInfo::first();
 
-        // Load the level relationship
-        $subject->load('Level');
-
-        // Fetch levels for the dropdown
-        $levels = Level::all();
-
-        //Fetch staff for the dropdown
-        $staffs = Staff::all();
-
-        return view('admin.pages.subjects.edit', compact('subject', 'schoolinfo', 'levels', 'staffs'));
     }
 
     /**
@@ -259,18 +247,7 @@ class ExamQuestionController extends Controller
      */
     public function edit(Subject $subject)
     {
-        $schoolinfo = SchoolInfo::first();
 
-        // Load the level relationship
-        $subject->load('Level');
-
-        // Fetch levels for the dropdown
-        $levels = Level::all();
-
-        //Fetch staff for the dropdown
-        $staffs = Staff::all();
-
-        return view('admin.pages.subjects.edit', compact('subject', 'schoolinfo', 'levels', 'staffs'));
     }
 
     /**

@@ -1,22 +1,17 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Classes | All Classes')
+@section('title', 'School Sessions | Settings')
 
 @php
     $imgpath = 'storage/front/images/';
 @endphp
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('adminpage/assets/css/lib/dataTables.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminpage/assets/css/lib/buttons.dataTables.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminpage/assets/css/lib/slick.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminpage/assets/css/lib/audioplayer.css') }}">
-@endpush
-
 @section('content')
+
+
     <div class="dashboard-main-body">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-            <h6 class="fw-semibold mb-0">Classes</h6>
+            <h6 class="fw-semibold mb-0">Sessions</h6>
             <ul class="d-flex align-items-center gap-2">
                 <li class="fw-medium">
                     <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
@@ -25,17 +20,18 @@
                     </a>
                 </li>
                 <li>-</li>
-                <li class="fw-medium"> Classes</li>
+                <li class="fw-medium"> Sessions</li>
             </ul>
         </div>
 
+
         <div class="card basic-data-table">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="card-title mb-0">All Classes</h5>
+                <h5 class="card-title mb-0">All School Sessions</h5>
                 <h5 class="card-title mb-0">
-                    <a href="{{ route('admin.students.index') }}"
+                    <a href="{{ route('admin.sessions.create') }}"
                         class="btn btn-outline-primary-600 radius-8 px-20 py-11 d-flex align-items-center gap-2">
-                        <iconify-icon icon="icons8:left-round" class="text-xl"></iconify-icon> All Students
+                        <iconify-icon icon="ei:plus" class="text-xl"></iconify-icon> Add New
                     </a>
                 </h5>
             </div>
@@ -47,9 +43,8 @@
                         <iconify-icon icon="akar-icons:double-check" class="icon text-xl"></iconify-icon>
                         {{ session('success') }}
                     </div>
-                    <button class="remove-button text-success-600 text-xxl line-height-1">
-                        <iconify-icon icon="iconamoon:sign-times-light" class="icon"></iconify-icon>
-                    </button>
+                    <button class="remove-button text-success-600 text-xxl line-height-1"> <iconify-icon
+                            icon="iconamoon:sign-times-light" class="icon"></iconify-icon></button>
                 </div>
             @endif
 
@@ -64,13 +59,13 @@
                                         <label class="form-check-label"> S.L </label>
                                     </div>
                                 </th>
-                                <th scope="col">Class Name</th>
-                                <th scope="col">Class Teacher</th>
+                                <th scope="col">Session Name</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($classes as $index => $class)
+                            @foreach ($sessions as $index => $sessionData)
                                 <tr>
                                     <td>
                                         <div class="form-check style-check d-flex align-items-center">
@@ -78,27 +73,35 @@
                                             <label class="form-check-label">{{ $index + 1 }}</label>
                                         </div>
                                     </td>
-                                    <td><a href="{{ $class->class_name }}"
-                                            class="text-primary-600">{{ $class->class_name }}</a></td>
+                                    <td><a href="{{ $sessionData->session_name }}"
+                                            class="text-primary-600">{{ $sessionData->session_name }}</a></td>
+                                  <td>
+                                        @if ($sessionData->status == "active")
+                                            <span class="badge bg-success-100 text-success-600">Active</span>
+                                        @else
+                                            <span class="badge bg-danger-100 text-danger-600">Disabled</span>
+                                        @endif
+                                    </td>
 
-                                    @if ($class->staff)
-                                        <td>{{ $class->staff->fullname }}</td>
-                                    @else
-                                        <td class="text-danger-600">N/A</td>
-                                    @endif
                                     <td class="d-flex gap-2 align-items-center">
                                         {{-- Edit Button --}}
-                                        <a href="{{ route('admin.students.filter', ['id' => $class->id ]) }}"
+                                        <a href="{{ route('admin.sessions.edit', $sessionData->id) }}"
                                             class="btn btn-outline-primary-600 radius-8 text-primary-600 d-inline-flex align-items-center justify-content-center gap-1">
-                                            <iconify-icon icon="akar-icons:eye" class="text-xl"></iconify-icon>
-                                            <span>
-                                                View
-                                                {{ Str::contains($class->class_name, ['Nursery', 'Primary']) ? 'Pupils' : 'Students' }}
-                                                [{{ count($class->students) }}]
-                                            </span>
-
+                                            <iconify-icon icon="akar-icons:edit" class="text-xl"></iconify-icon>
+                                            <span>Edit</span>
                                         </a>
 
+                                        {{-- Delete Button --}}
+                                        <form action="{{ route('admin.sessions.destroy', $sessionData->id) }}" method="POST"
+                                            class="d-inline form-delete">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="btn btn-outline-danger radius-8 text-danger d-inline-flex align-items-center justify-content-center gap-1">
+                                                <iconify-icon icon="mingcute:delete-2-line" class="text-xl"></iconify-icon>
+                                                <span>Delete</span>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -106,37 +109,19 @@
                     </table>
                 </div>
             </div>
+
         </div>
     </div>
+    </div>
+
 @endsection
 
 @push('scripts')
-    <!-- Buttons Extension JS -->
-    <script src="{{ asset('adminpage/assets/js/lib/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('adminpage/assets/js/lib/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('adminpage/assets/js/lib/buttons.print.min.js') }}"></script>
-
-    <!-- FileSaver and jszip/pdfmake for Excel/PDF -->
-    <script src="{{ asset('adminpage/assets/js/lib/jszip.min.js') }}"></script>
-    <script src="{{ asset('adminpage/assets/js/lib/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('adminpage/assets/js/lib/vfs_fonts.js') }}"></script>
-
-
     <script>
         $('.remove-button').on('click', function() {
-            $(this).closest('.alert').addClass('d-none');
+            $(this).closest('.alert').addClass('d-none')
         });
-
-        let table = new DataTable('#dataTable', {
-            sorting: false,
-            dom: 'Bfrtip',
-            buttons: [
-                'copy',
-                'excel',
-                'pdf',
-                'print'
-            ]
-        });
+        let table = new DataTable('#dataTable');
 
         $(document).ready(function() {
             $('.form-delete').on('submit', function(e) {

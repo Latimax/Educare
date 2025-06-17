@@ -48,66 +48,61 @@
 
 
         <div class="card basic-data-table">
-           <div class="card-header d-flex align-items-center justify-content-between">
+            <div class="card-header d-flex align-items-center justify-content-between">
                 <h5 class="card-title mb-0">All Subjects</h5>
 
             </div>
 
             <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card h-100">
-                                <div class="row align-content-center justify-content-between">
-                                    <!-- Junior Subjects -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card h-100">
+                            <div class="row align-content-center justify-content-between">
+                                <!-- Junior Subjects -->
 
-                                    <div class="col-sm-5 border-1 p-24 mr-2 radius-8">
-                                        <h6 class="text-md text-primary-light mb-16">Junior Subjects <span
-                                                class="badge bg-info">
-                                                {{ count($junior_subjects) }}</span></h6>
-                                        <hr>
-                                        @foreach ($junior_subjects as $subject)
-                                            <div class="mb-20 d-flex align-items-center justify-content-between">
-                                                <label for="junior_subject_{{ $subject->id }}"
-                                                    class="form-label fw-semibold text-primary-light text-sm">
-                                                    {{ $subject->subject_name }}
-                                                </label>
-
-                                                <div class="switch-primary form-switch d-flex align-items-center gap-2">
-                                                    <span class="badge bg-danger">Off</span>
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        name="junior_subjects[{{ $subject->id }}]"
-                                                        id="junior_subject_{{ $subject->id }}" data-subject-toggle
-                                                        data-subject-id="{{ $subject->id }}" data-subject-type="junior"
-                                                        {{ $subject->status == 'active' ? 'checked' : '' }}>
-                                                    <span class="badge bg-success">On</span>
-                                                </div>
+                                <div class="col-sm-6 border-1 p-24 radius-8">
+                                    <h6 class="text-md text-primary-light mb-16">Junior Subjects </h6>
+                                    <hr>
+                                    @foreach ($junior_subjects as $subject)
+                                        <div class="mb-20 d-flex align-items-center justify-content-between">
+                                            <label for="junior_subject_{{ $subject->id }}"
+                                                class="form-label fw-semibold text-primary-light text-sm">
+                                                {{ $subject->subject_name }}
+                                            </label>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <a href="{{ route('admin.cbtquestions.subjects.view', ['subjectId' => $subject->id, 'className' => 'Junior Secondary 1']) }}"
+                                                    class="badge bg-danger">Jss 1 [{{ $subject->jss1_questions_count }}]</a>
+                                                <a href="{{ route('admin.cbtquestions.subjects.view', ['subjectId' => $subject->id, 'className' => 'Junior Secondary 2']) }}" class="badge bg-success">Jss 2
+                                                    [{{ $subject->jss2_questions_count }}]</a>
+                                                <a href="{{ route('admin.cbtquestions.subjects.view', ['subjectId' => $subject->id, 'className' => 'Junior Secondary 3']) }}" class="badge bg-info">Jss 3
+                                                    [{{ $subject->jss3_questions_count }}]</a>
                                             </div>
-                                        @endforeach
-                                    </div>
-                                    <!-- Senior Subjects -->
-                                    <div class="col-sm-5 border-1 p-24 radius-8">
-                                        <h6 class="text-md text-primary-light mb-16">Senior Subjects <span
-                                                class="badge bg-primary">{{ count($senior_subjects) }}</span></h6>
-                                        <hr>
-                                        @foreach ($senior_subjects as $subject)
-                                            <div class="mb-20 d-flex align-items-center justify-content-between">
-                                                <label for="senior_subject_{{ $subject->id }}"
-                                                    class="form-label fw-semibold text-primary-light text-sm">
-                                                    {{ $subject->subject_name }}
-                                                </label>
-                                                <div class="switch-primary form-switch d-flex align-items-center gap-2">
-                                                    <span class="badge bg-danger">Off</span>
-                                                    <input class="form-check-input" type="checkbox"
-                                                        name="senior_subjects[{{ $subject->id }}]"
-                                                        id="senior_subject_{{ $subject->id }}" data-subject-toggle
-                                                        data-subject-id="{{ $subject->id }}" data-subject-type="senior"
-                                                        {{ $subject->status == 'active' ? 'checked' : '' }}>
-                                                    <span class="badge bg-success">On</span></span>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
+                                        </div>
+                                    @endforeach
                                 </div>
+                                <!-- Senior Subjects -->
+                                <div class="col-sm-6 border-1 p-24 radius-8">
+                                    <h6 class="text-md text-primary-light mb-16">Senior Subjects <span
+                                            class="badge bg-primary">{{ count($senior_subjects) }}</span></h6>
+                                    <hr>
+                                    @foreach ($senior_subjects as $subject)
+                                        <div class="mb-20 d-flex align-items-center justify-content-between">
+                                            <label for="senior_subject_{{ $subject->id }}"
+                                                class="form-label fw-semibold text-primary-light text-sm">
+                                                {{ $subject->subject_name }}
+                                            </label>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <a href=" {{ route('admin.cbtquestions.subjects.view', ['subjectId' => $subject->id, 'className' => 'Senior Secondary 1']) }}" class="badge bg-danger">Sss 1
+                                                    [{{ $subject->sss1_questions_count }}]</a>
+                                                <a href="{{ route('admin.cbtquestions.subjects.view', ['subjectId' => $subject->id, 'className' => 'Senior Secondary 2']) }}" class="badge bg-success">Sss 2
+                                                    [{{ $subject->sss2_questions_count }}]</a>
+                                                <a href="{{ route('admin.cbtquestions.subjects.view', ['subjectId' => $subject->id, 'className' => 'Senior Secondary 3']) }}" class="badge bg-info">Sss 3
+                                                    [{{ $subject->sss3_questions_count }}]</a>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -62,4 +62,10 @@ class Student extends Model
     {
         return $this->hasMany(Payment::class, 'student_id');
     }
+
+    // Student result relationship
+    public function results()
+{
+    return $this->hasMany(StudentResult::class);
+}
 }

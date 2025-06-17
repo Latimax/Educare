@@ -21,6 +21,7 @@ class CbtQuestion extends Model
         'option_d',
         'answer',
         'status',
+        'description',
     ];
 
     /**
@@ -36,5 +37,6 @@ class CbtQuestion extends Model
     public function class() {
         return $this->belongsTo(ClassModel::class, 'classes_id');
     }
+
 
 }

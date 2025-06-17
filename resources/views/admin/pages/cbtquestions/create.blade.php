@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'All Subjects')
+@section('title', 'Create Question')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('adminpage/assets/css/lib/toastr.min.css') }}">
@@ -9,7 +9,7 @@
 @section('content')
     <div class="dashboard-main-body">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-            <h6 class="fw-semibold mb-0">Subjects</h6>
+            <h6 class="fw-semibold mb-0">Questions</h6>
             <ul class="d-flex align-items-center gap-2">
                 <li class="fw-medium">
                     <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
@@ -18,15 +18,22 @@
                     </a>
                 </li>
                 <li>-</li>
-                <li class="fw-medium">Subjects</li>
+                <li class="fw-medium">
+                    <a href="{{ route('admin.cbtquestions.subjects.view', ['subjectId' => $subjectId, 'className' => $className]) }}"
+                        class="hover-text-primary">
+                        Questions
+                    </a>
+                </li>
+                <li>-</li>
+                <li class="fw-medium">Create Question </li>
             </ul>
         </div>
 
         <div class="card basic-data-table">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="card-title mb-0">All Subjects</h5>
+                <h5 class="card-title mb-0">Create Question</h5>
                 <div>
-                    <a href="{{ route('admin.cbtquestions.subjects.view', ['subjectId' => $question->subject_id, 'className' => $className]) }}"
+                    <a href="{{ route('admin.cbtquestions.subjects.view', ['subjectId' => $subjectId, 'className' => $className]) }}"
                         class="btn btn-outline-primary-600 radius-8 px-20 py-11 d-flex align-items-center">
                         <iconify-icon icon="icons8:left-round" class="text-xl"></iconify-icon> Back
                     </a>
@@ -38,23 +45,23 @@
                     <div class="col-xxl-8">
                         <div class="card p-0 overflow-hidden position-relative radius-12 h-100">
                             <div class="card-header py-16 px-24 bg-base border border-end-0 border-start-0 border-top-0">
-                                <h6 class="text-lg mb-0">Add/Edit Question</h6>
+                                <h6 class="text-lg mb-0">CBT - {{ $className }} {{ $subjectName }} </h6>
                             </div>
                             <div class="card-body p-24 pt-10">
-                                <form method="POST" action="{{ route('admin.cbtquestions.subjects.save') }}"
+                                <form method="POST" action="{{ route('admin.cbtquestions.subjects.save.new') }}"
                                     id="subject-form" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
 
                                     <!-- Hidden Fields -->
-                                    <input type="hidden" name="subject_id" value="{{ $question->subject_id ?? '' }}">
-                                    <input type="hidden" name="classes_id" value="{{ $question->classes_id ?? '' }}">
+                                    <input type="hidden" name="subject_id" value="{{ $subjectId ?? '' }}">
+                                    <input type="hidden" name="classes_id" value="{{ $classId ?? '' }}">
 
                                     <!-- Question -->
                                     <div class="mb-3">
                                         <label for="question"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">Question</label>
-                                        <textarea id="question" name="question" class="form-control {{ $errors->has('question') ? 'is-invalid' : '' }}">{{ old('question', $question->question ?? '') }}</textarea>
+                                        <textarea id="question" name="question" class="form-control {{ $errors->has('question') ? 'is-invalid' : '' }}">{{ old('question') }}</textarea>
                                         @if ($errors->has('question'))
                                             <div class="invalid-feedback">
                                                 {{ $errors->first('question') }}
@@ -67,7 +74,7 @@
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold text-primary-light text-sm mb-8">Option
                                                 A</label>
-                                            <textarea id="option_a" name="option_a" class="form-control {{ $errors->has('option_a') ? 'is-invalid' : '' }}">{{ old('option_a', $question->option_a ?? '') }}</textarea>
+                                            <textarea id="option_a" name="option_a" class="form-control {{ $errors->has('option_a') ? 'is-invalid' : '' }}">{{ old('option_a') }}</textarea>
                                             @if ($errors->has('option_a'))
                                                 <div class="invalid-feedback">
                                                     {{ $errors->first('option_a') }}
@@ -77,7 +84,7 @@
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold text-primary-light text-sm mb-8">Option
                                                 B</label>
-                                            <textarea id="option_b" name="option_b" class="form-control {{ $errors->has('option_b') ? 'is-invalid' : '' }}">{{ old('option_b', $question->option_b ?? '') }}</textarea>
+                                            <textarea id="option_b" name="option_b" class="form-control {{ $errors->has('option_b') ? 'is-invalid' : '' }}">{{ old('option_b') }}</textarea>
                                             @if ($errors->has('option_b'))
                                                 <div class="invalid-feedback">
                                                     {{ $errors->first('option_b') }}
@@ -89,7 +96,7 @@
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold text-primary-light text-sm mb-8">Option
                                                 C</label>
-                                            <textarea id="option_c" name="option_c" class="form-control {{ $errors->has('option_c') ? 'is-invalid' : '' }}">{{ old('option_c', $question->option_c ?? '') }}</textarea>
+                                            <textarea id="option_c" name="option_c" class="form-control {{ $errors->has('option_c') ? 'is-invalid' : '' }}">{{ old('option_c') }}</textarea>
                                             @if ($errors->has('option_c'))
                                                 <div class="invalid-feedback">
                                                     {{ $errors->first('option_c') }}
@@ -100,7 +107,7 @@
                                             <label class="form-label fw-semibold text-primary-light text-sm mb-8">Option
                                                 D</label>
                                             <textarea rows="4" id="option_d" name="option_d"
-                                                class="form-control {{ $errors->has('option_d') ? 'is-invalid' : '' }}">{{ old('option_d', $question->option_d ?? '') }}</textarea>
+                                                class="form-control {{ $errors->has('option_d') ? 'is-invalid' : '' }}">{{ old('option_d') }}</textarea>
                                             @if ($errors->has('option_d'))
                                                 <div class="invalid-feedback">
                                                     {{ $errors->first('option_d') }}
@@ -116,17 +123,13 @@
                                         <select id="answer" name="answer"
                                             class="form-select {{ $errors->has('answer') ? 'is-invalid' : '' }}">
                                             <option value="">Select Answer</option>
-                                            <option value="option_a"
-                                                {{ old('answer', $question->answer ?? '') == 'option_a' ? 'selected' : '' }}>
+                                            <option value="option_a" {{ old('answer') == 'option_a' ? 'selected' : '' }}>
                                                 Option A</option>
-                                            <option value="option_b"
-                                                {{ old('answer', $question->answer ?? '') == 'option_b' ? 'selected' : '' }}>
+                                            <option value="option_b" {{ old('answer') == 'option_b' ? 'selected' : '' }}>
                                                 Option B</option>
-                                            <option value="option_c"
-                                                {{ old('answer', $question->answer ?? '') == 'option_c' ? 'selected' : '' }}>
+                                            <option value="option_c" {{ old('answer') == 'option_c' ? 'selected' : '' }}>
                                                 Option C</option>
-                                            <option value="option_d"
-                                                {{ old('answer', $question->answer ?? '') == 'option_d' ? 'selected' : '' }}>
+                                            <option value="option_d" {{ old('answer') == 'option_d' ? 'selected' : '' }}>
                                                 Option D</option>
                                         </select>
                                         @if ($errors->has('answer'))
@@ -143,7 +146,7 @@
                                                 class="form-label fw-semibold text-primary-light text-sm mb-8">Description
                                                 (optional)</label>
                                             <textarea id="description" name="description"
-                                                class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}">{{ old('description', $question->description ?? '') }}</textarea>
+                                                class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}">{{ old('description') }}</textarea>
                                             @if ($errors->has('description'))
                                                 <div class="invalid-feedback">
                                                     {{ $errors->first('description') }}
@@ -155,7 +158,7 @@
                                                 class="form-label fw-semibold text-primary-light text-sm mb-8">Explanation
                                                 (optional)</label>
                                             <textarea id="explanation" name="explanation"
-                                                class="form-control {{ $errors->has('explanation') ? 'is-invalid' : '' }}">{{ old('explanation', $question->explanation ?? '') }}</textarea>
+                                                class="form-control {{ $errors->has('explanation') ? 'is-invalid' : '' }}">{{ old('explanation') }}</textarea>
                                             @if ($errors->has('explanation'))
                                                 <div class="invalid-feedback">
                                                     {{ $errors->first('explanation') }}
@@ -256,7 +259,7 @@
             };
 
             @if (session('success'))
-                toastr.success('Question updated successfully!');
+                toastr.success('Question created successfully!');
             @endif
         });
     </script>

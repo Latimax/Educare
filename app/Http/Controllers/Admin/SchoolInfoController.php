@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SchoolInfo;
+use App\Models\SessionModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,8 @@ class SchoolInfoController extends Controller
     public function index()
     {
         $schoolinfo = SchoolInfo::first();
-        return view('admin.pages.schoolinfo', compact('schoolinfo'));
+        $sessions = SessionModel::orderBy('session_name', 'ASC')->get();
+        return view('admin.pages.schoolinfo', compact('schoolinfo', 'sessions'));
     }
 
     /**

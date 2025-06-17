@@ -1,13 +1,17 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'School Management Dashboard')
 
+@push('styles')
+
+    <link href="{{ asset('adminpage/assets/css/main.min.css') }}" rel="stylesheet">
+
+@endpush
 @section('content')
-
     <div class="dashboard-main-body">
-
+        <!-- Header Section -->
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-            <h6 class="fw-semibold mb-0">Dashboard</h6>
+            <h6 class="fw-semibold mb-0">Admin Dashboard</h6>
             <ul class="d-flex align-items-center gap-2">
                 <li class="fw-medium">
                     <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
@@ -20,428 +24,227 @@
             </ul>
         </div>
 
+        <!-- Status Message -->
+        @if (session('status'))
+            <div class="alert mx-4 alert-info my-4 bg-success-100 text-success-600 border-success-600 border-start-width-4-px border-top-0 border-end-0 border-bottom-0 px-24 py-13 mb-0 fw-semibold text-lg radius-4 d-flex align-items-center justify-content-between" role="alert">
+                <div class="d-flex align-items-center gap-2">
+                    <iconify-icon icon="mingcute:emoji-line" class="icon text-xl"></iconify-icon>
+                    {{ session('status') }}
+                </div>
+                <button class="remove-button text-success-600 text-xxl line-height-1">
+                    <iconify-icon icon="iconamoon:sign-times-light" class="icon"></iconify-icon>
+                </button>
+            </div>
+        @endif
+
+        <!-- System Statistics -->
         <div class="row gy-4">
             <div class="col-xxl-8">
                 <div class="row gy-4">
-
-                    @if (session('status'))
-                        <div class="alert mx-4 alert-info my-4 bg-success-100 text-success-600 border-success-600 border-start-width-4-px border-top-0 border-end-0 border-bottom-0 px-24 py-13 mb-0 fw-semibold text-lg radius-4 d-flex align-items-center justify-content-between"
-                            role="alert">
-                            <div class="d-flex align-items-center gap-2">
-                                <iconify-icon icon="mingcute:emoji-line" class="icon text-xl"></iconify-icon>
-                                {{ session('status') }}
-                            </div>
-                            <button class="remove-button text-success-600 text-xxl line-height-1"> <iconify-icon
-                                    icon="iconamoon:sign-times-light" class="icon"></iconify-icon></button>
-                        </div>
-                    @endif
-
+                    <!-- Total Students -->
                     <div class="col-xxl-4 col-sm-6">
                         <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-1">
                             <div class="card-body p-0">
                                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-
                                     <div class="d-flex align-items-center gap-2">
-                                        <span
-                                            class="mb-0 w-48-px h-48-px bg-primary-600 flex-shrink-0 text-white d-flex justify-content-center align-items-center rounded-circle h6">
-                                            <iconify-icon icon="mingcute:user-follow-fill" class="icon"></iconify-icon>
+                                        <span class="mb-0 w-48-px h-48-px bg-primary-600 flex-shrink-0 text-white d-flex justify-content-center align-items-center rounded-circle h6">
+                                            <iconify-icon icon="mingcute:user-2-fill" class="icon"></iconify-icon>
                                         </span>
                                         <div>
-                                            <span class="mb-2 fw-medium text-secondary-light text-sm">New Users</span>
-                                            <h6 class="fw-semibold">15,000</h6>
+                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total Students</span>
+                                            <h6 class="fw-semibold">{{ number_format($totalStudents) }}</h6>
                                         </div>
                                     </div>
-
-                                    <div id="new-user-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
+                                    <div id="students-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                                 </div>
-                                <p class="text-sm mb-0">Increase by <span
-                                        class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+200</span>
-                                    this week</p>
+                                <p class="text-sm mb-0">New this month: <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{ $monthlyStudents }}</span></p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Total Staff -->
                     <div class="col-xxl-4 col-sm-6">
                         <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-2">
                             <div class="card-body p-0">
                                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-
                                     <div class="d-flex align-items-center gap-2">
-                                        <span
-                                            class="mb-0 w-48-px h-48-px bg-success-main flex-shrink-0 text-white d-flex justify-content-center align-items-center rounded-circle h6">
-                                            <iconify-icon icon="mingcute:user-follow-fill" class="icon"></iconify-icon>
+                                        <span class="mb-0 w-48-px h-48-px bg-success-main flex-shrink-0 text-white d-flex justify-content-center align-items-center rounded-circle h6">
+                                            <iconify-icon icon="mdi:teacher" class="icon"></iconify-icon>
                                         </span>
                                         <div>
-                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Active
-                                                Users</span>
-                                            <h6 class="fw-semibold">8,000</h6>
+                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total Staff</span>
+                                            <h6 class="fw-semibold">{{ number_format($totalStaff) }}</h6>
                                         </div>
                                     </div>
-
-                                    <div id="active-user-chart" class="remove-tooltip-title rounded-tooltip-value">
-                                    </div>
+                                    <div id="staff-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                                 </div>
-                                <p class="text-sm mb-0">Increase by <span
-                                        class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+200</span>
-                                    this week</p>
+                                <p class="text-sm mb-0">Active Staff</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Total Parents -->
                     <div class="col-xxl-4 col-sm-6">
                         <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-3">
                             <div class="card-body p-0">
                                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-
                                     <div class="d-flex align-items-center gap-2">
-                                        <span
-                                            class="mb-0 w-48-px h-48-px bg-yellow text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
-                                            <iconify-icon icon="iconamoon:discount-fill" class="icon"></iconify-icon>
+                                        <span class="mb-0 w-48-px h-48-px bg-yellow text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
+                                            <iconify-icon icon="mdi:account-group" class="icon"></iconify-icon>
                                         </span>
                                         <div>
-                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total
-                                                Sales</span>
-                                            <h6 class="fw-semibold">$5,00,000</h6>
+                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total Parents</span>
+                                            <h6 class="fw-semibold">{{ number_format($totalParents) }}</h6>
                                         </div>
                                     </div>
-
-                                    <div id="total-sales-chart" class="remove-tooltip-title rounded-tooltip-value">
-                                    </div>
+                                    <div id="parents-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                                 </div>
-                                <p class="text-sm mb-0">Increase by <span
-                                        class="bg-danger-focus px-1 rounded-2 fw-medium text-danger-main text-sm">-$10k</span>
-                                    this week</p>
+                                <p class="text-sm mb-0">Registered Parents</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Total Classes -->
                     <div class="col-xxl-4 col-sm-6">
                         <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-4">
                             <div class="card-body p-0">
                                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-
                                     <div class="d-flex align-items-center gap-2">
-                                        <span
-                                            class="mb-0 w-48-px h-48-px bg-purple text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
-                                            <iconify-icon icon="mdi:message-text" class="icon"></iconify-icon>
+                                        <span class="mb-0 w-48-px h-48-px bg-purple text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
+                                            <iconify-icon icon="mdi:school" class="icon"></iconify-icon>
                                         </span>
                                         <div>
-                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Conversion</span>
-                                            <h6 class="fw-semibold">25%</h6>
+                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total Classes</span>
+                                            <h6 class="fw-semibold">{{ number_format($totalClasses) }}</h6>
                                         </div>
                                     </div>
-
-                                    <div id="conversion-user-chart" class="remove-tooltip-title rounded-tooltip-value">
-                                    </div>
+                                    <div id="classes-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                                 </div>
-                                <p class="text-sm mb-0">Increase by <span
-                                        class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+5%</span>
-                                    this week</p>
+                                <p class="text-sm mb-0">Active Classes</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Total Levels -->
                     <div class="col-xxl-4 col-sm-6">
                         <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-5">
                             <div class="card-body p-0">
                                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-
                                     <div class="d-flex align-items-center gap-2">
-                                        <span
-                                            class="mb-0 w-48-px h-48-px bg-pink text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
-                                            <iconify-icon icon="mdi:leads" class="icon"></iconify-icon>
+                                        <span class="mb-0 w-48-px h-48-px bg-pink text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
+                                            <iconify-icon icon="mdi:stairs" class="icon"></iconify-icon>
                                         </span>
                                         <div>
-                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Leads</span>
-                                            <h6 class="fw-semibold">250</h6>
+                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total Levels</span>
+                                            <h6 class="fw-semibold">{{ number_format($totalLevels) }}</h6>
                                         </div>
                                     </div>
-
-                                    <div id="leads-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
+                                    <div id="levels-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                                 </div>
-                                <p class="text-sm mb-0">Increase by <span
-                                        class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+20</span>
-                                    this week</p>
+                                <p class="text-sm mb-0">Academic Levels</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Total Sessions -->
                     <div class="col-xxl-4 col-sm-6">
                         <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-6">
                             <div class="card-body p-0">
                                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-
                                     <div class="d-flex align-items-center gap-2">
-                                        <span
-                                            class="mb-0 w-48-px h-48-px bg-cyan text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
-                                            <iconify-icon icon="streamline:bag-dollar-solid" class="icon"></iconify-icon>
+                                        <span class="mb-0 w-48-px h-48-px bg-cyan text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
+                                            <iconify-icon icon="mdi:calendar" class="icon"></iconify-icon>
                                         </span>
                                         <div>
-                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total
-                                                Profit</span>
-                                            <h6 class="fw-semibold">$3,00,700</h6>
+                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total Sessions</span>
+                                            <h6 class="fw-semibold">{{ number_format($totalSessions) }}</h6>
                                         </div>
                                     </div>
+                                    <div id="sessions-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
+                                </div>
+                                <p class="text-sm mb-0">Active: {{ $activeSession ? $activeSession : 'None' }}</p>
+                            </div>
+                        </div>
+                    </div>
 
-                                    <div id="total-profit-chart" class="remove-tooltip-title rounded-tooltip-value">
+                    <!-- Total Subjects -->
+                    <div class="col-xxl-4 col-sm-6">
+                        <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-7">
+                            <div class="card-body p-0">
+                                <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="mb-0 w-48-px h-48-px bg-orange text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
+                                            <iconify-icon icon="mdi:book-open-page-variant" class="icon"></iconify-icon>
+                                        </span>
+                                        <div>
+                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total Subjects</span>
+                                            <h6 class="fw-semibold">{{ number_format($totalSubjects) }}</h6>
+                                        </div>
                                     </div>
+                                    <div id="subjects-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                                 </div>
-                                <p class="text-sm mb-0">Increase by <span
-                                        class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+$15k</span>
-                                    this week</p>
+                                <p class="text-sm mb-0">Offered Subjects</p>
                             </div>
                         </div>
                     </div>
 
-                </div>
-            </div>
-            <!-- Revenue Growth start -->
-            <div class="col-xxl-4">
-                <div class="card h-100 radius-8 border">
-                    <div class="card-body p-24">
-                        <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                            <div>
-                                <h6 class="mb-2 fw-bold text-lg">Revenue Growth</h6>
-                                <span class="text-sm fw-medium text-secondary-light">Weekly Report</span>
-                            </div>
-                            <div class="text-end">
-                                <h6 class="mb-2 fw-bold text-lg">$50,000.00</h6>
-                                <span
-                                    class="bg-success-focus ps-12 pe-12 pt-2 pb-2 rounded-2 fw-medium text-success-main text-sm">$10k</span>
+                    <!-- Total Payments -->
+                    <div class="col-xxl-4 col-sm-6">
+                        <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-8">
+                            <div class="card-body p-0">
+                                <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="mb-0 w-48-px h-48-px bg-orange text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
+                                            <iconify-icon icon="mdi:currency-ngn" class="icon"></iconify-icon>
+                                        </span>
+                                        <div>
+                                            <span class="mb-2 fw-medium text-secondary-light text-sm">Total Payments</span>
+                                            <h6 class="fw-semibold">{{ number_format($totalPayments) }}</h6>
+                                        </div>
+                                    </div>
+                                    <div id="payments-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
+                                </div>
+                                <p class="text-sm mb-0">Amount: <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">₦{{ number_format($totalPaymentAmount, 2) }}</span></p>
                             </div>
                         </div>
-                        <div id="revenue-chart" class="mt-28"></div>
                     </div>
                 </div>
             </div>
-            <!-- Revenue Growth End -->
 
-            <!-- Earning Static start -->
-            <div class="col-xxl-8">
-                <div class="card h-100 radius-8 border-0">
-                    <div class="card-body p-24">
-                        <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                            <div>
-                                <h6 class="mb-2 fw-bold text-lg">Earning Statistic</h6>
-                                <span class="text-sm fw-medium text-secondary-light">Yearly earning overview</span>
-                            </div>
-                            <div class="">
-                                <select class="form-select form-select-sm w-auto bg-base border text-secondary-light">
-                                    <option>Yearly</option>
-                                    <option>Monthly</option>
-                                    <option>Weekly</option>
-                                    <option>Today</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mt-20 d-flex justify-content-center flex-wrap gap-3">
-
-                            <div
-                                class="d-inline-flex align-items-center gap-2 p-2 radius-8 border pe-36 br-hover-primary group-item">
-                                <span
-                                    class="bg-neutral-100 w-44-px h-44-px text-xxl radius-8 d-flex justify-content-center align-items-center text-secondary-light group-hover:bg-primary-600 group-hover:text-white">
-                                    <iconify-icon icon="fluent:cart-16-filled" class="icon"></iconify-icon>
-                                </span>
-                                <div>
-                                    <span class="text-secondary-light text-sm fw-medium">Sales</span>
-                                    <h6 class="text-md fw-semibold mb-0">$200k</h6>
-                                </div>
-                            </div>
-
-                            <div
-                                class="d-inline-flex align-items-center gap-2 p-2 radius-8 border pe-36 br-hover-primary group-item">
-                                <span
-                                    class="bg-neutral-100 w-44-px h-44-px text-xxl radius-8 d-flex justify-content-center align-items-center text-secondary-light group-hover:bg-primary-600 group-hover:text-white">
-                                    <iconify-icon icon="uis:chart" class="icon"></iconify-icon>
-                                </span>
-                                <div>
-                                    <span class="text-secondary-light text-sm fw-medium">Income</span>
-                                    <h6 class="text-md fw-semibold mb-0">$200k</h6>
-                                </div>
-                            </div>
-
-                            <div
-                                class="d-inline-flex align-items-center gap-2 p-2 radius-8 border pe-36 br-hover-primary group-item">
-                                <span
-                                    class="bg-neutral-100 w-44-px h-44-px text-xxl radius-8 d-flex justify-content-center align-items-center text-secondary-light group-hover:bg-primary-600 group-hover:text-white">
-                                    <iconify-icon icon="ph:arrow-fat-up-fill" class="icon"></iconify-icon>
-                                </span>
-                                <div>
-                                    <span class="text-secondary-light text-sm fw-medium">Profit</span>
-                                    <h6 class="text-md fw-semibold mb-0">$200k</h6>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="barChart"></div>
-                    </div>
-                </div>
-            </div>
-            <!-- Earning Static End -->
-
-            <!-- Campaign Static start -->
+            <!-- Widgets Column (Calendar, Time, Date) -->
             <div class="col-xxl-4">
                 <div class="row gy-4">
+                    <!-- Calendar Widget -->
                     <div class="col-xxl-12 col-sm-6">
                         <div class="card h-100 radius-8 border-0">
                             <div class="card-body p-24">
-                                <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                                    <h6 class="mb-2 fw-bold text-lg">Campaigns</h6>
-                                    <div class="">
-                                        <select
-                                            class="form-select form-select-sm w-auto bg-base border text-secondary-light">
-                                            <option>Yearly</option>
-                                            <option>Monthly</option>
-                                            <option>Weekly</option>
-                                            <option>Today</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="mt-3">
-
-                                    <div class="d-flex align-items-center justify-content-between gap-3 mb-12">
-                                        <div class="d-flex align-items-center">
-                                            <span
-                                                class="text-xxl line-height-1 d-flex align-content-center flex-shrink-0 text-orange">
-                                                <iconify-icon icon="majesticons:mail" class="icon"></iconify-icon>
-                                            </span>
-                                            <span class="text-primary-light fw-medium text-sm ps-12">Email</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2 w-100">
-                                            <div class="w-100 max-w-66 ms-auto">
-                                                <div class="progress progress-sm rounded-pill" role="progressbar"
-                                                    aria-label="Success example" aria-valuenow="25" aria-valuemin="0"
-                                                    aria-valuemax="100">
-                                                    <div class="progress-bar bg-orange rounded-pill" style="width: 80%;">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <span class="text-secondary-light font-xs fw-semibold">80%</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center justify-content-between gap-3 mb-12">
-                                        <div class="d-flex align-items-center">
-                                            <span
-                                                class="text-xxl line-height-1 d-flex align-content-center flex-shrink-0 text-success-main">
-                                                <iconify-icon icon="eva:globe-2-fill" class="icon"></iconify-icon>
-                                            </span>
-                                            <span class="text-primary-light fw-medium text-sm ps-12">Website</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2 w-100">
-                                            <div class="w-100 max-w-66 ms-auto">
-                                                <div class="progress progress-sm rounded-pill" role="progressbar"
-                                                    aria-label="Success example" aria-valuenow="25" aria-valuemin="0"
-                                                    aria-valuemax="100">
-                                                    <div class="progress-bar bg-success-main rounded-pill"
-                                                        style="width: 60%;"></div>
-                                                </div>
-                                            </div>
-                                            <span class="text-secondary-light font-xs fw-semibold">60%</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center justify-content-between gap-3 mb-12">
-                                        <div class="d-flex align-items-center">
-                                            <span
-                                                class="text-xxl line-height-1 d-flex align-content-center flex-shrink-0 text-info-main">
-                                                <iconify-icon icon="fa6-brands:square-facebook"
-                                                    class="icon"></iconify-icon>
-                                            </span>
-                                            <span class="text-primary-light fw-medium text-sm ps-12">Facebook</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2 w-100">
-                                            <div class="w-100 max-w-66 ms-auto">
-                                                <div class="progress progress-sm rounded-pill" role="progressbar"
-                                                    aria-label="Success example" aria-valuenow="25" aria-valuemin="0"
-                                                    aria-valuemax="100">
-                                                    <div class="progress-bar bg-info-main rounded-pill"
-                                                        style="width: 49%;"></div>
-                                                </div>
-                                            </div>
-                                            <span class="text-secondary-light font-xs fw-semibold">49%</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center justify-content-between gap-3">
-                                        <div class="d-flex align-items-center">
-                                            <span
-                                                class="text-xxl line-height-1 d-flex align-content-center flex-shrink-0 text-indigo">
-                                                <iconify-icon icon="fluent:location-off-20-filled"
-                                                    class="icon"></iconify-icon>
-                                            </span>
-                                            <span class="text-primary-light fw-medium text-sm ps-12">Email</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2 w-100">
-                                            <div class="w-100 max-w-66 ms-auto">
-                                                <div class="progress progress-sm rounded-pill" role="progressbar"
-                                                    aria-label="Success example" aria-valuenow="25" aria-valuemin="0"
-                                                    aria-valuemax="100">
-                                                    <div class="progress-bar bg-indigo rounded-pill" style="width: 70%;">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <span class="text-secondary-light font-xs fw-semibold">70%</span>
-                                        </div>
-                                    </div>
-
-                                </div>
-
+                                <h6 class="mb-2 fw-bold text-lg">School Calendar</h6>
+                                <div id="calendar" class="mt-3"></div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Time and Date Widget -->
                     <div class="col-xxl-12 col-sm-6">
-                        <div class="card h-100 radius-8 border-0 overflow-hidden">
+                        <div class="card h-100 radius-8 border-0">
                             <div class="card-body p-24">
-                                <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                                    <h6 class="mb-2 fw-bold text-lg">Customer Overview</h6>
-                                    <div class="">
-                                        <select
-                                            class="form-select form-select-sm w-auto bg-base border text-secondary-light">
-                                            <option>Yearly</option>
-                                            <option>Monthly</option>
-                                            <option>Weekly</option>
-                                            <option>Today</option>
-                                        </select>
-                                    </div>
+                                <h6 class="mb-2 fw-bold text-lg">Current Time & Date</h6>
+                                <div class="mt-3 text-center">
+                                    <p class="text-lg fw-semibold" id="current-time"></p>
+                                    <p class="text-sm text-secondary-light">{{ now()->format('l, F j, Y') }}</p>
                                 </div>
-
-                                <div class="d-flex flex-wrap align-items-center mt-3">
-                                    <ul class="flex-shrink-0">
-                                        <li class="d-flex align-items-center gap-2 mb-28">
-                                            <span class="w-12-px h-12-px rounded-circle bg-success-main"></span>
-                                            <span class="text-secondary-light text-sm fw-medium">Total: 500</span>
-                                        </li>
-                                        <li class="d-flex align-items-center gap-2 mb-28">
-                                            <span class="w-12-px h-12-px rounded-circle bg-warning-main"></span>
-                                            <span class="text-secondary-light text-sm fw-medium">New: 500</span>
-                                        </li>
-                                        <li class="d-flex align-items-center gap-2">
-                                            <span class="w-12-px h-12-px rounded-circle bg-primary-600"></span>
-                                            <span class="text-secondary-light text-sm fw-medium">Active: 1500</span>
-                                        </li>
-                                    </ul>
-                                    <div id="donutChart"
-                                        class="flex-grow-1 apexcharts-tooltip-z-none title-style circle-none"></div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Campaign Static End -->
 
-
+            <!-- Recent Transactions -->
             <div class="col-xxl-6">
                 <div class="card h-100">
-                    <div
-                        class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between">
-                        <h6 class="text-lg fw-semibold mb-0">Last Transaction</h6>
-                        <a href="javascript:void(0)"
-                            class="text-primary-600 hover-text-primary d-flex align-items-center gap-1">
+                    <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between">
+                        <h6 class="text-lg fw-semibold mb-0">Recent Transactions</h6>
+                        <a href="javascript:void(0)" class="text-primary-600 hover-text-primary d-flex align-items-center gap-1">
                             View All
                             <iconify-icon icon="solar:alt-arrow-right-linear" class="icon"></iconify-icon>
                         </a>
@@ -452,70 +255,104 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Transaction ID</th>
+                                        <th scope="col">Student</th>
                                         <th scope="col">Date</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>5986124445445</td>
-                                        <td>27 Mar 2024</td>
-                                        <td> <span
-                                                class="bg-warning-focus text-warning-main px-24 py-4 rounded-pill fw-medium text-sm">Pending</span>
-                                        </td>
-                                        <td>$20,000.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5986124445445</td>
-                                        <td>27 Mar 2024</td>
-                                        <td> <span
-                                                class="bg-danger-focus text-danger-main px-24 py-4 rounded-pill fw-medium text-sm">Rejected</span>
-                                        </td>
-                                        <td>$20,000.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5986124445445</td>
-                                        <td>27 Mar 2024</td>
-                                        <td> <span
-                                                class="bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm">Completed</span>
-                                        </td>
-                                        <td>$20,000.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5986124445445</td>
-                                        <td>27 Mar 2024</td>
-                                        <td> <span
-                                                class="bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm">Completed</span>
-                                        </td>
-                                        <td>$20,000.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5986124445445</td>
-                                        <td>27 Mar 2024</td>
-                                        <td> <span
-                                                class="bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm">Completed</span>
-                                        </td>
-                                        <td>$20,000.00</td>
-                                    </tr>
+                                    @foreach ($recentPayments as $payment)
+                                        <tr>
+                                            <td>{{ $payment->id }}</td>
+                                            <td>{{ $payment->student ? $payment->student->full_name : 'N/A' }}</td>
+                                            <td>{{ $payment->created_at->format('d M Y') }}</td>
+                                            <td>
+                                                <span class="px-24 py-4 rounded-pill fw-medium text-sm
+                                                    {{ $payment->status == 'pending' ? 'bg-warning-focus text-warning-main' :
+                                                       ($payment->status == 'completed' ? 'bg-success-focus text-success-main' : 'bg-danger-focus text-danger-main') }}">
+                                                    {{ ucfirst($payment->status) }}
+                                                </span>
+                                            </td>
+                                            <td>₦{{ number_format($payment->amount_paid, 2) }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Latest Performance End -->
+
+            <!-- Payment Statistics -->
+            <div class="col-xxl-6">
+                <div class="card h-100 radius-8 border-0">
+                    <div class="card-body p-24">
+                        <h6 class="mb-2 fw-bold text-lg">Payment Statistics</h6>
+                        <div class="mt-20 d-flex justify-content-center flex-wrap gap-3">
+                            <div class="d-inline-flex align-items-center gap-2 p-2 radius-8 border pe-36 br-hover-primary group-item">
+                                <span class="bg-neutral-100 w-44-px h-44-px text-xxl radius-8 d-flex justify-content-center align-items-center text-secondary-light group-hover:bg-primary-600 group-hover:text-white">
+                                    <iconify-icon icon="mdi:currency-ngn" class="icon"></iconify-icon>
+                                </span>
+                                <div>
+                                    <span class="text-secondary-light text-sm fw-medium">Total Payments</span>
+                                    <h6 class="text-md fw-semibold mb-0">{{ number_format($totalPayments) }}</h6>
+                                </div>
+                            </div>
+                            <div class="d-inline-flex align-items-center gap-2 p-2 radius-8 border pe-36 br-hover-primary group-item">
+                                <span class="bg-neutral-100 w-44-px h-44-px text-xxl radius-8 d-flex justify-content-center align-items-center text-secondary-light group-hover:bg-primary-600 group-hover:text-white">
+                                    <iconify-icon icon="mdi:check-circle" class="icon"></iconify-icon>
+                                </span>
+                                <div>
+                                    <span class="text-secondary-light text-sm fw-medium">Completed</span>
+                                    <h6 class="text-md fw-semibold mb-0">{{ number_format($completedPayments) }}</h6>
+                                </div>
+                            </div>
+                            <div class="d-inline-flex align-items-center gap-2 p-2 radius-8 border pe-36 br-hover-primary group-item">
+                                <span class="bg-neutral-100 w-44-px h-44-px text-xxl radius-8 d-flex justify-content-center align-items-center text-secondary-light group-hover:bg-primary-600 group-hover:text-white">
+                                    <iconify-icon icon="mdi:clock-outline" class="icon"></iconify-icon>
+                                </span>
+                                <div>
+                                    <span class="text-secondary-light text-sm fw-medium">Pending</span>
+                                    <h6 class="text-md fw-semibold mb-0">{{ number_format($pendingPayments) }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="payment-chart"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-
 @endsection
 
 @push('scripts')
     <script src="{{ asset('adminpage/assets/js/homeTwoChart.js') }}"></script>
+    <script src="{{ asset('adminpage/assets/js/calendarmain.min.js') }}"></script>
     <script>
+        // Alert Dismiss
         $('.remove-button').on('click', function() {
-            $(this).closest('.alert').addClass('d-none')
+            $(this).closest('.alert').addClass('d-none');
         });
+
+        // Calendar Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 'auto',
+                events: [] // Add events dynamically if needed
+            });
+            calendar.render();
+        });
+
+        // Real-time Clock
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour12: true });
+            document.getElementById('current-time').textContent = timeString;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
     </script>
 @endpush

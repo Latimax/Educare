@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Classes | All Classes')
+@section('title', 'Compute Result | All Classes')
 
 @php
     $imgpath = 'storage/front/images/';
@@ -16,7 +16,7 @@
 @section('content')
     <div class="dashboard-main-body">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-            <h6 class="fw-semibold mb-0">Classes</h6>
+            <h6 class="fw-semibold mb-0">Compute Result</h6>
             <ul class="d-flex align-items-center gap-2">
                 <li class="fw-medium">
                     <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
@@ -25,17 +25,17 @@
                     </a>
                 </li>
                 <li>-</li>
-                <li class="fw-medium"> Classes</li>
+                <li class="fw-medium"> Compute Result</li>
             </ul>
         </div>
 
         <div class="card basic-data-table">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="card-title mb-0">All Classes</h5>
+                <h5 class="card-title mb-0">Select Class</h5>
                 <h5 class="card-title mb-0">
-                    <a href="{{ route('admin.students.index') }}"
+                    <a href="{{ route('admin.studentresults.index') }}"
                         class="btn btn-outline-primary-600 radius-8 px-20 py-11 d-flex align-items-center gap-2">
-                        <iconify-icon icon="icons8:left-round" class="text-xl"></iconify-icon> All Students
+                        <iconify-icon icon="icons8:left-round" class="text-xl"></iconify-icon> Back
                     </a>
                 </h5>
             </div>
@@ -88,13 +88,12 @@
                                     @endif
                                     <td class="d-flex gap-2 align-items-center">
                                         {{-- Edit Button --}}
-                                        <a href="{{ route('admin.students.filter', ['id' => $class->id ]) }}"
+                                        <a href="{{ route('admin.studentresults.filter', ['id' => $class->id ]) }}"
                                             class="btn btn-outline-primary-600 radius-8 text-primary-600 d-inline-flex align-items-center justify-content-center gap-1">
                                             <iconify-icon icon="akar-icons:eye" class="text-xl"></iconify-icon>
                                             <span>
-                                                View
-                                                {{ Str::contains($class->class_name, ['Nursery', 'Primary']) ? 'Pupils' : 'Students' }}
-                                                [{{ count($class->students) }}]
+                                                View Results
+                                                [{{ count($class->studentResults) }}]
                                             </span>
 
                                         </a>

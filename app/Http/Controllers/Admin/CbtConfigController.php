@@ -59,10 +59,16 @@ class CbtConfigController extends Controller
         $validatedData = $request->validate([
             'ft_min_score' => 'required|array',
             'ft_min_score.*' => 'required|integer|min:0|max:100',
+            'ft_max_score' => 'required|array',
+            'ft_max_score.*' => 'required|integer|min:0|max:100|gte:ft_min_score.*',
             'st_min_score' => 'required|array',
             'st_min_score.*' => 'required|integer|min:0|max:100',
+            'st_max_score' => 'required|array',
+            'st_max_score.*' => 'required|integer|min:0|max:100|gte:st_min_score.*',
             'exam_min_score' => 'required|array',
             'exam_min_score.*' => 'required|integer|min:0|max:100',
+            'exam_max_score' => 'required|array',
+            'exam_max_score.*' => 'required|integer|min:0|max:100|gte:exam_min_score.*',
         ]);
 
         foreach ($validatedData['ft_min_score'] as $levelId => $ftScore) {
@@ -73,15 +79,20 @@ class CbtConfigController extends Controller
                     ->where('id', $levelId)
                     ->update([
                         'ft_min_score' => $ftScore,
+                        'ft_max_score' => $validatedData['ft_max_score'][$levelId] ?? 0,
                         'st_min_score' => $validatedData['st_min_score'][$levelId] ?? 0,
+                        'st_max_score' => $validatedData['st_max_score'][$levelId] ?? 0,
                         'exam_min_score' => $validatedData['exam_min_score'][$levelId] ?? 0,
+                        'exam_max_score' => $validatedData['exam_max_score'][$levelId] ?? 0,
                     ]);
             }
         }
 
-
         // Redirect back to the index with success message
-        return redirect()->route('admin.cbtconfig.index')->with(['success' => 'CBT scores updated successfully.', 'activeTab' => 'other']);
+        return redirect()->route('admin.cbtconfig.index')->with([
+            'success' => 'CBT scores updated successfully.',
+            'activeTab' => 'other'
+        ]);
     }
 
 

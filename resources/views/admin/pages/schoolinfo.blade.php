@@ -217,8 +217,12 @@
                 <h6 class="mb-3 mt-4">School Session Information</h6>
                 <div class="row">
                     <div class="col-sm-4 mb-3">
-                        <label for="current_session" class="form-label">Current Session</label>
-                        <input type="text" class="form-control" id="current_session" name="current_session" placeholder="eg 2024/2025" value="{{ old('current_session', $schoolinfo->current_session ?? '') }}">
+                         <label for="current_session" class="form-label">Current Session</label>
+                        <select name="current_session" id="current_session" class="form-control">
+                            @foreach ($sessions as $sessionData)
+                             <option value="{{ $sessionData->session_name }}" {{ old('current_session', $schoolinfo->current_session ?? '') == $sessionData->session_name ? 'selected' : '' }}>{{ $sessionData->session_name }}</option>
+                            @endforeach
+                        </select>
                         @error('current_session')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

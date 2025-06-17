@@ -75,7 +75,7 @@
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> All Students</a>
                     </li>
                     <li
-                        class="{{ request()->routeIs('admin.students.classes') || request()->routeIs('admin.students.classes.*')  ? 'active active-page' : '' }}">
+                        class="{{ request()->routeIs('admin.students.classes') || request()->routeIs('admin.students.classes.*') || request()->routeIs('admin.students.filter') ? 'active active-page' : '' }}">
                         <a href="{{ route('admin.students.classes.all') }}"><i
                                 class="ri-circle-fill circle-icon text-danger-600 w-auto"></i>Classes</a>
                     </li>
@@ -138,6 +138,32 @@
                 </a>
             </li>
 
+            <li class = "{{ request()->routeIs('admin.studentscores.*') ? 'active-page' : '' }}">
+                <a href="{{ route('admin.studentscores.index') }}" class="{{ request()->routeIs('admin.studentscores.*') ? 'active-page' : '' }}  ">
+                    <iconify-icon icon="carbon:result" class="menu-icon"></iconify-icon>
+                    <span>Test/Exam Scores</span>
+                </a>
+            </li>
+
+
+             <li class="sidebar-menu-group-title">Results</li>
+
+            <li class = "{{ request()->routeIs('admin.studentresults.*') ? 'active-page' : '' }}">
+                <a href="{{ route('admin.studentresults.index') }}" class="{{ request()->routeIs('admin.studentresults.*') ? 'active-page' : '' }} ">
+                    <iconify-icon icon="fluent-mdl2:poll-results" class="menu-icon"></iconify-icon>
+                    <span>Compute Result</span>
+                </a>
+            </li>
+
+
+            <li class = "{{ request()->routeIs('admin.broadsheet.*') ? 'active-page' : '' }}">
+                <a href="{{ route('admin.broadsheet.index') }}" class="{{ request()->routeIs('admin.broadsheet.*') ? 'active-page' : '' }} ">
+                    <iconify-icon icon="foundation:results-demographics" class="menu-icon"></iconify-icon>
+                    <span>Broadsheet</span>
+                </a>
+            </li>
+
+
 
 
             <li class="sidebar-menu-group-title">Application</li>
@@ -192,7 +218,7 @@
 
             @php
                 // Check if the current route is one of the settings routes
-                $settingsRoutes = ['admin.school-info.*', 'admin.levels.*', 'admin.classes.*', 'admin.profile'];
+                $settingsRoutes = ['admin.school-info.*', 'admin.levels.*', 'admin.sessions.*', 'admin.classes.*', 'admin.profile'];
                 $isSettingsOpen = request()->routeIs($settingsRoutes);
             @endphp
 
@@ -211,6 +237,11 @@
                     <li class="{{ request()->routeIs('admin.classes.*') ? 'active active-page' : '' }}">
                         <a href="{{ route('admin.classes.index') }}"><i
                                 class="ri-circle-fill circle-icon text-secondary-600 w-auto"></i> Classes</a>
+                    </li>
+
+                     <li class="{{ request()->routeIs('admin.sessions.*') ? 'active active-page' : '' }}">
+                        <a href="{{ route('admin.sessions.index') }}"><i
+                                class="ri-circle-fill circle-icon text-secondary-600 w-auto"></i> Sessions</a>
                     </li>
 
                     <li class="{{ request()->routeIs('admin.school-info.*') ? 'active active-page' : '' }}">

@@ -347,11 +347,24 @@
                                             <thead class="table-light">
                                                 <tr>
                                                     <th class="text-primary-light text-sm fw-semibold">Level Name</th>
-                                                    <th class="text-primary-light text-sm fw-semibold">First Test Min Score
+                                                    <th colspan="2"
+                                                        class="text-primary-light text-sm fw-semibold text-center">First
+                                                        Test</th>
+                                                    <th colspan="2"
+                                                        class="text-primary-light text-sm fw-semibold text-center">Second
+                                                        Test</th>
+                                                    <th colspan="2"
+                                                        class="text-primary-light text-sm fw-semibold text-center">Exam
                                                     </th>
-                                                    <th class="text-primary-light text-sm fw-semibold">Second Test Min
-                                                        Score</th>
-                                                    <th class="text-primary-light text-sm fw-semibold">Exam Min Score</th>
+                                                </tr>
+                                                <tr>
+                                                    <th></th>
+                                                    <th class="text-primary-light text-sm fw-semibold">Min Score</th>
+                                                    <th class="text-primary-light text-sm fw-semibold">Max Score</th>
+                                                    <th class="text-primary-light text-sm fw-semibold">Min Score</th>
+                                                    <th class="text-primary-light text-sm fw-semibold">Max Score</th>
+                                                    <th class="text-primary-light text-sm fw-semibold">Min Score</th>
+                                                    <th class="text-primary-light text-sm fw-semibold">Max Score</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -360,26 +373,50 @@
                                                         <td class="align-middle">
                                                             <span class="fw-medium">{{ $level->level_name }}</span>
                                                         </td>
+                                                        <!-- First Test Scores -->
                                                         <td>
                                                             <input type="number"
                                                                 name="ft_min_score[{{ $level->id }}]"
                                                                 class="form-control radius-8"
                                                                 value="{{ old('ft_min_score.' . $level->id, $level->ft_min_score ?? '') }}"
-                                                                min="0" max="100" placeholder="Enter score">
+                                                                min="0" max="100" placeholder="Min score">
                                                         </td>
+                                                        <td>
+                                                            <input type="number"
+                                                                name="ft_max_score[{{ $level->id }}]"
+                                                                class="form-control radius-8"
+                                                                value="{{ old('ft_max_score.' . $level->id, $level->ft_max_score ?? '') }}"
+                                                                min="0" max="100" placeholder="Max score">
+                                                        </td>
+                                                        <!-- Second Test Scores -->
                                                         <td>
                                                             <input type="number"
                                                                 name="st_min_score[{{ $level->id }}]"
                                                                 class="form-control radius-8"
                                                                 value="{{ old('st_min_score.' . $level->id, $level->st_min_score ?? '') }}"
-                                                                min="0" max="100" placeholder="Enter score">
+                                                                min="0" max="100" placeholder="Min score">
                                                         </td>
+                                                        <td>
+                                                            <input type="number"
+                                                                name="st_max_score[{{ $level->id }}]"
+                                                                class="form-control radius-8"
+                                                                value="{{ old('st_max_score.' . $level->id, $level->st_max_score ?? '') }}"
+                                                                min="0" max="100" placeholder="Max score">
+                                                        </td>
+                                                        <!-- Exam Scores -->
                                                         <td>
                                                             <input type="number"
                                                                 name="exam_min_score[{{ $level->id }}]"
                                                                 class="form-control radius-8"
                                                                 value="{{ old('exam_min_score.' . $level->id, $level->exam_min_score ?? '') }}"
-                                                                min="0" max="100" placeholder="Enter score">
+                                                                min="0" max="100" placeholder="Min score">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number"
+                                                                name="exam_max_score[{{ $level->id }}]"
+                                                                class="form-control radius-8"
+                                                                value="{{ old('exam_max_score.' . $level->id, $level->exam_max_score ?? '') }}"
+                                                                min="0" max="100" placeholder="Max score">
                                                         </td>
                                                     </tr>
                                                 @endforeach

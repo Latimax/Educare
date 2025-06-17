@@ -23,6 +23,9 @@ return new class extends Migration
             $table->text('option_c'); // JSON or text field for options
             $table->text('option_d'); // JSON or text field for options
 
+            $table->string('description')->nullable(); // Optional description or hint for the question
+            $table->text('explanation')->nullable(); // Explanation for the answer
+
             //answer filed
             $table->string('answer'); // The correct answer (e.g., 'A', 'B', 'C', 'D')
             $table->enum('status', ['active', 'disabled'])->default('active'); // Status of the question

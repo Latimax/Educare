@@ -28,4 +28,16 @@ class Subject extends Model
     {
         return $this->belongsTo(Staff::class);
     }
+
+    public function cbtQuestions()
+    {
+        return $this->hasMany(CbtQuestion::class, 'subject_id');
+    }
+
+    public function classes()
+    {
+        // Many-to-many relationship with classes via pivot table
+        return $this->belongsToMany(ClassModel::class,'classes', 'subject_id', 'classes_id')
+            ->withPivot('id'); // Include pivot table fields if needed
+    }
 }
