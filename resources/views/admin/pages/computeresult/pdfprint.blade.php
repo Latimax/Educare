@@ -40,6 +40,7 @@
             border-radius: 4px;
             font-weight: 400;
             font-size: 12px;
+            background: none;
         }
 
         .custom-table {
@@ -175,7 +176,7 @@
             <!-- Student Profile -->
             <div class="col-3 d-flex justify-content-center align-items-center">
                 @if ($result->student->photo)
-                    <img src="{{ asset('storage/' . $result->student->firstname) }}" alt="photo" width="100"
+                    <img src="{{ asset('storage/' . $result->student->photo) }}" alt="photo" width="100"
                         height="100" class="rounded-circle">
                 @else
                     <img src="{{ asset($imgpath . 'default-avatar.png') }}" alt="default" width="100" height="100"
@@ -189,7 +190,7 @@
                 Information</h3>
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <div class="col-md-4 col-12 mb-2">
+                    <div class="col-md-6 col-12 mb-2">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Full Name</span>
@@ -201,7 +202,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-12 mb-2">
+                    <div class="col-md-3 col-12 mb-2">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Age</span>
@@ -218,7 +219,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-12 mb-2">
+                    <div class="col-md-3 col-12 mb-2">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Gender</span>
@@ -362,6 +363,24 @@
                                 </td>
                             </tr>
                         @endforeach
+                        <tr>
+                            <td class="border p-2 text-center"></td>
+                            <td class="border p-2 fw-bold">Overall Total</td>
+                            <td class="border p-2 text-center fw-bold">
+                                {{ $resultData['summary']['first_test_total'] ?? 0 }}
+                            </td>
+                            <td class="border p-2 text-center fw-bold">
+                                {{ $resultData['summary']['second_test_total'] ?? 0 }}
+                            </td>
+                            <td class="border p-2 text-center fw-bold">{{ $resultData['summary']['exam_total'] ?? 0 }}
+                            </td>
+                            <td class="border p-2 text-center fw-bold">{{ $resultData['summary']['overall_total'] ?? 0 }}
+                            </td>
+                            <td class="border p-2 text-center"></td>
+                            <td class="border p-2 text-center">
+
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -537,55 +556,55 @@
 @push('scripts')
     <script src="{{ asset('adminpage/assets/js/lib/html2pdf.bundle.min.js') }}"></script>
     <script>
-    function generatePDF() {
-        return new Promise((resolve, reject) => {
-            const element = document.getElementById('pdf-content');
-            if (!element) {
-                reject('PDF content element not found');
-                return;
-            }
-
-            const opt = {
-                margin: 2,
-                filename: '{{ $result->student->firstname }}_{{ $result->student->middlename }}_{{ $result->student->lastname }}_result.pdf',
-                image: {
-                    type: 'jpeg',
-                    quality: 0.98
-                },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true, // Enable if you have cross-origin images
-                    logging: true // Helpful for debugging
-                },
-                jsPDF: {
-                    unit: 'mm',
-                    format: 'a4',
-                    orientation: 'portrait'
+        function generatePDF() {
+            return new Promise((resolve, reject) => {
+                const element = document.getElementById('pdf-content');
+                if (!element) {
+                    reject('PDF content element not found');
+                    return;
                 }
-            };
 
-            html2pdf()
-                .set(opt)
-                .from(element)
-                .save()
-                .then(resolve)
-                .catch(reject);
-        });
-    }
+                const opt = {
+                    margin: 2,
+                    filename: '{{ $result->student->firstname }}_{{ $result->student->middlename }}_{{ $result->student->lastname }}_result.pdf',
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true, // Enable if you have cross-origin images
+                        logging: true // Helpful for debugging
+                    },
+                    jsPDF: {
+                        unit: 'mm',
+                        format: 'a4',
+                        orientation: 'portrait'
+                    }
+                };
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            await generatePDF();
-            // Small delay to ensure PDF is fully processed before navigating back
-            setTimeout(() => {
-                window.history.back();
-            }, 1000);
-        } catch (error) {
-            console.error('PDF generation failed:', error);
-            // Optional: Show error message to user
-            alert('Failed to generate PDF. Please try again or contact support.');
-            window.history.back();
+                html2pdf()
+                    .set(opt)
+                    .from(element)
+                    .save()
+                    .then(resolve)
+                    .catch(reject);
+            });
         }
-    });
-</script>
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await generatePDF();
+                // Small delay to ensure PDF is fully processed before navigating back
+                setTimeout(() => {
+                    window.history.back();
+                }, 1000);
+            } catch (error) {
+                console.error('PDF generation failed:', error);
+                // Optional: Show error message to user
+                alert('Failed to generate PDF. Please try again or contact support.');
+                window.history.back();
+            }
+        });
+    </script>
 @endpush

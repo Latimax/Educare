@@ -74,8 +74,7 @@
                                             <label class="form-check-label">{{ $index + 1 }}</label>
                                         </div>
                                     </td>
-                                    <td><a href="{{ $level->level_name }}"
-                                            class="text-primary-600">{{ $level->level_name }}</a></td>
+                                    <td>{{ $level->level_name }}</td>
                                     <td>{{ $level->short_name }}</td>
                                     <td>
                                         @if ($level->status == "active")

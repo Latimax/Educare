@@ -169,4 +169,10 @@ class PaymentController extends Controller
         // Redirect back to payments index with success message
         return redirect()->route('admin.payments.index')->with('success', 'Payment deleted successfully.');
     }
+
+    public function printReceipt(Payment $payment)
+    {
+        $schoolinfo = SchoolInfo::first(); // Adjust based on your model
+        return view('admin.pages.payments.print_receipt', compact('payment', 'schoolinfo'));
+    }
 }

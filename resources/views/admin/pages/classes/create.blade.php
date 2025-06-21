@@ -59,7 +59,7 @@
                         </div>
 
                         <!-- Section -->
-                        <div class="col-sm-6 mb-20">
+                        <div class="col-sm-3 mb-20">
                             <label for="section" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                 Section <span class="text-danger-600">*</span>
                             </label>
@@ -73,6 +73,23 @@
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
+
+                         <!-- Rank -->
+                        <div class="col-sm-3 mb-20">
+                            <label for="rank" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                Rank <span class="text-danger-600">*</span>
+                            </label>
+                            <select name="rank" id="rank" class="form-select radius-8 @error('rank') is-invalid @enderror">
+                                <option value="">-- Select Rank --</option>
+                                @for ($count = 1;  $count <= $totalClass; $count++)
+                                    <option value="{{ $count }}" {{ old('rank') == $count ? 'selected' : '' }}>{{ $count }}</option>
+                                @endfor
+                            </select>
+                            @error('rank')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
 
                         <!-- Class Teacher -->
                         <div class="col-sm-6 mb-20">

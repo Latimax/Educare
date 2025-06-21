@@ -78,7 +78,7 @@
                                                 width="50" height="50" class="rounded-circle">
                                         @endif
                                     </td>
-                                    <td>{{ $student->firstname }} {{ $student->lastname }}</td>
+                                    <td><a href="{{ route('admin.students.show', $student->id) }}" class="text-primary-600"> {{ $student->firstname }} {{ $student->lastname }}</a></td>
                                     <td>{{ $student->studentId }}</td>
                                     <td>{{ $student->studentClass->class_name ?? 'N/A' }}</td>
                                     <td>

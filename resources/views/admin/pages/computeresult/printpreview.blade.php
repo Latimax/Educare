@@ -176,7 +176,7 @@
             <!-- Student Profile -->
             <div class="col-3 d-flex justify-content-center align-items-center">
                 @if ($result->student->photo)
-                    <img src="{{ asset('storage/' . $result->student->firstname) }}" alt="photo" width="100"
+                    <img src="{{ asset('storage/' . $result->student->photo) }}" alt="photo" width="100"
                         height="100" class="rounded-circle">
                 @else
                     <img src="{{ asset($imgpath . 'default-avatar.png') }}" alt="default" width="100" height="100"
@@ -260,7 +260,7 @@
                                     <button type="button" class="btn">No. in Class</button>
                                 </div>
                                 <div class="form-control">
-                                    {{ count(\App\Models\ClassModel::where('id', $class->id)->get()) ?? 0 }}
+                                    {{ count(\App\Models\Student::where('class_id', $class->id)->get()) ?? 0 }}
                                 </div>
                             </div>
                         </td>
@@ -363,6 +363,23 @@
                                 </td>
                             </tr>
                         @endforeach
+                        <tr>
+                            <td class="border p-2 text-center"></td>
+                            <td class="border p-2 fw-bold">Overall Total</td>
+                            <td class="border p-2 text-center fw-bold">
+                                {{ $resultData['summary']['first_test_total'] ?? 0 }}
+                            </td>
+                            <td class="border p-2 text-center fw-bold">
+                                {{ $resultData['summary']['second_test_total'] ?? 0 }}
+                            </td>
+                            <td class="border p-2 text-center fw-bold">{{ $resultData['summary']['exam_total'] ?? 0 }}</td>
+                            <td class="border p-2 text-center fw-bold">{{ $resultData['summary']['overall_total'] ?? 0 }}
+                            </td>
+                            <td class="border p-2 text-center"></td>
+                            <td class="border p-2 text-center">
+
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

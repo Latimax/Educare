@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClassModel;
 use App\Models\Level;
+use App\Models\Payment;
+use App\Models\PromotionHistory;
 use App\Models\SchoolInfo;
 use App\Models\Student;
 use App\Models\StudentParent;
@@ -228,8 +230,11 @@ class StudentController extends Controller
         $schoolinfo = SchoolInfo::first();
         $classes = ClassModel::all();
         $parents = StudentParent::all();
+        $promotion_history = PromotionHistory::where("student_id", $student->id)->get();
+        $payments = Payment::where("student_id", $student->id)->get();
 
-        return view('admin.pages.students.edit', compact('schoolinfo', 'student', 'classes', 'parents'));
+
+        return view('admin.pages.students.show', compact('schoolinfo', 'student', 'classes', 'parents', 'promotion_history', 'payments'));
     }
 
     /**

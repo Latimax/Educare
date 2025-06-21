@@ -40,4 +40,5 @@ class Subject extends Model
         return $this->belongsToMany(ClassModel::class,'classes', 'subject_id', 'classes_id')
             ->withPivot('id'); // Include pivot table fields if needed
     }
+
 }

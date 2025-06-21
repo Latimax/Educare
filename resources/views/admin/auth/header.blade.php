@@ -5,7 +5,7 @@
     <title>Admin Login - @yield('title') </title>
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('front/images/favicon.png') }}">
+    <link rel="icon" href="{{ asset('storage/front/images/favicon.png') }}">
 
     <!-- remix icon font css  -->
     <link rel="stylesheet" href="{{ asset('adminpage/assets/css/remixicon.css') }}">

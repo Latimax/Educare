@@ -5,7 +5,6 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CbtConfigController;
 use App\Http\Controllers\Admin\CbtQuestionController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ExamConfigController;
 use App\Http\Controllers\Admin\ExamQuestionController;
 use App\Http\Controllers\Admin\GradeController;
 use App\Http\Controllers\Admin\ParentController;
@@ -20,7 +19,6 @@ use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\StudentScoresController;
 use App\Http\Controllers\Admin\SubjectController;
-use App\Http\Middleware\AdminMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +29,7 @@ use App\Http\Middleware\AdminMiddleware;
 |
 */
 
+Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 Route::get('forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot-password');
@@ -129,6 +128,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     //Payment Resource
     Route::resource('payments', PaymentController::class);
+    Route::get('/admin/payments/print/{payment}', [PaymentController::class, 'printReceipt'])->name('payments.print');
 
     //CBT Setup Resource
     Route::resource('cbtconfig', CbtConfigController::class);
@@ -168,9 +168,23 @@ Route::middleware(['auth:admin'])->group(function () {
 
     //Broadsheet Print and Download
     Route::get('broadsheet/index', [ResultController::class, 'indexBsheet'])->name('broadsheet.index');
-    Route::get('broadsheet/print', [ResultController::class, 'printBsheet'])->name('broadsheet.print');
-    Route::get('broadsheet/download', [ResultController::class, 'downloadBsheet'])->name('broadsheet.download');
-    Route::get('broadsheet', [ResultController::class, 'showBsheet'])->name('broadsheet');
+    Route::get('broadsheet/{id}/print', [ResultController::class, 'printBsheet'])->name('broadsheet.print');
+
+    //Advanced Settings
+    Route::get('advanced/index', [SchoolInfoController::class, 'indexAdvanced'])->name('advanced.index');
+    Route::post('advanced/promote', [SchoolInfoController::class, 'promote'])->name('advanced.promote');
+    Route::post('advanced/promote/student/{id}', [SchoolInfoController::class, 'deleteStudentPromotion'])->name('advanced.promote.student');
+
+    //Promote/Demote a single student
+    Route::post('advanced/promote/single/{id}', [SchoolInfoController::class, 'addStudentPromotion'])->name('advanced.promote.single');
+    Route::post('advanced/demote/single/{id}', [SchoolInfoController::class, 'addStudentDemotion'])->name('advanced.demote.single');
+
+
+    Route::get('advanced/promote/delete/{id}', [SchoolInfoController::class, 'deletePromotion'])->name('advanced.promote.delete');
+
+    Route::post('advanced/questions/delete', [SchoolInfoController::class, 'deleteQuestions'])->name('advanced.delete-questions');
+    Route::post('advanced/results/delete', [SchoolInfoController::class, 'deleteResults'])->name('advanced.delete-results');
+
 
     // Profile Management
     Route::get('profile', [AuthController::class, 'showProfile'])->name('profile');

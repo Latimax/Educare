@@ -67,9 +67,12 @@ class ParentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Level $level)
+    public function show($id)
     {
-        //
+        $parent = StudentParent::findOrFail($id);
+        $children = $parent->children;
+        $schoolinfo = SchoolInfo::first();
+        return view('admin.pages.parents.show', compact('schoolinfo', 'parent', 'children'));
     }
 
     /**

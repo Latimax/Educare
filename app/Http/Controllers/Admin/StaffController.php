@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Level;
 use App\Models\SchoolInfo;
 use App\Models\Staff;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -114,7 +115,10 @@ class StaffController extends Controller
      */
     public function show(Staff $staff)
     {
-        //
+        $schoolinfo = SchoolInfo::first();
+        $levels = Level::all();
+        $subjects = Subject::where("staff_id", $staff->id)->get();
+        return view('admin.pages.staffs.show', compact('schoolinfo', 'staff', 'levels', 'subjects'));
     }
 
     /**

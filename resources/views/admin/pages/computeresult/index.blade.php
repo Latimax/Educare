@@ -33,25 +33,32 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">{{ $className ?? 'All Students' }}</h5>
 
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 flex-wrap">
                     <a href="{{ route('admin.studentresults.classes', $classId) }}"
-                        class="btn btn-outline-secondary d-flex align-items-center gap-1">
-                        <iconify-icon icon="ic:round-arrow-back" class="text-xl"></iconify-icon>
+                        class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+                        <iconify-icon icon="ic:round-arrow-back" class="text-sm"></iconify-icon>
                         Back
                     </a>
 
                     <a href="{{ route('admin.studentresults.rankall', $classId) }}"
-                        class="btn btn-outline-warning d-flex align-items-center gap-1">
-                        <iconify-icon icon="mdi:trophy-outline" class="text-xl"></iconify-icon>
+                        class="btn btn-outline-warning btn-sm d-flex align-items-center gap-1">
+                        <iconify-icon icon="mdi:trophy-outline" class="text-sm"></iconify-icon>
                         Rank All
                     </a>
 
+                    <a href="{{ route('admin.broadsheet.print', $classId) }}" target="_blank"
+                        class="btn btn-outline-info btn-sm d-flex align-items-center gap-1">
+                        <iconify-icon icon="foundation:results-demographics" class="text-sm"></iconify-icon>
+                        Broadsheet
+                    </a>
+
                     <a href="{{ route('admin.studentresults.compute.create', $classId) }}"
-                        class="btn btn-outline-primary d-flex align-items-center gap-1">
-                        <iconify-icon icon="mdi:plus-box-outline" class="text-xl"></iconify-icon>
+                        class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1">
+                        <iconify-icon icon="mdi:plus-box-outline" class="text-sm"></iconify-icon>
                         Add New
                     </a>
                 </div>
+
             </div>
 
 

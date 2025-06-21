@@ -345,6 +345,27 @@ class ResultController extends Controller
         return view('admin.pages.computeresult.printpreview', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'result', 'level_config'));
     }
 
+     public function printBsheet($classId)
+    {
+
+        $schoolinfo = SchoolInfo::first();
+
+        $results = StudentResult::where('class_id', $classId)->get();
+
+        $class = ClassModel::find($classId);
+
+        $level_config = Level::where('id', $class->level_id)->first();
+
+        $subjects = Subject::where('level_id', $class->level_id)->where("status", 'active')->get();
+
+        $comments = ResultComment::all()->load('grade');
+
+        $grades = Grade::all();
+
+        return view('admin.pages.computeresult.printbroadsheetpreview', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'results', 'level_config'));
+    }
+
+
     public function downloadPDF(DomPDF $pdf, $resultId)
     {
 

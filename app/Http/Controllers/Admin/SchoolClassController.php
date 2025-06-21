@@ -31,8 +31,9 @@ class SchoolClassController extends Controller
         $schoolinfo = SchoolInfo::first();
         $levels = Level::all();
         $staffs =  Staff::where('user_type', 'teacher')->get();
+        $totalClass = count(ClassModel::all());
 
-        return view('admin.pages.classes.create', compact('schoolinfo', 'levels', 'staffs'));
+        return view('admin.pages.classes.create', compact('schoolinfo', 'levels', 'staffs', 'totalClass'));
     }
 
     /**
@@ -45,6 +46,7 @@ class SchoolClassController extends Controller
         $validatedData = $request->validate([
             'class_name' => 'required|string|max:255|unique:classes,class_name',
             'section' => 'required|string|in:A,B,C,D,E',
+            'rank' => 'required',
             'class_teacher_id' => 'nullable|exists:staffs,id|unique:classes,class_teacher_id',
             'level_id' => 'required|exists:levels,id',
         ]);
@@ -68,8 +70,9 @@ class SchoolClassController extends Controller
         $class = ClassModel::findOrFail($classId);
         $levels = Level::all();
         $staffs = Staff::where('user_type', 'teacher')->get();
+        $totalClass = count(ClassModel::all());
 
-        return view('admin.pages.classes.edit', compact('schoolinfo', 'class', 'levels', 'staffs'));
+        return view('admin.pages.classes.edit', compact('schoolinfo', 'class', 'levels', 'staffs', 'totalClass'));
     }
 
     public function show($classId)
@@ -78,8 +81,9 @@ class SchoolClassController extends Controller
         $class = ClassModel::findOrFail($classId);
         $levels = Level::all();
         $staffs = Staff::where('user_type', 'teacher')->get();
+        $totalClass = count(ClassModel::all());
 
-        return view('admin.pages.classes.edit', compact('schoolinfo', 'class', 'levels', 'staffs'));
+        return view('admin.pages.classes.edit', compact('schoolinfo', 'class', 'levels', 'staffs', 'totalClass'));
     }
 
 
@@ -95,6 +99,7 @@ class SchoolClassController extends Controller
         $validatedData = $request->validate([
             'class_name' => 'required|string|max:255|unique:classes,class_name,' . $class->id,
             'section' => 'required|string|in:A,B,C,D,E',
+            'rank' => 'required',
             'level_id' => 'required|exists:levels,id',
             'class_teacher_id' => [
                 'nullable',

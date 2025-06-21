@@ -66,7 +66,7 @@
                                             <label class="form-check-label">{{ $index + 1 }}</label>
                                         </div>
                                     </td>
-                                    <td><a href="{{ $level->level_name }}"
+                                    <td><a href="{{ route('admin.studentresults.classes', $level->id) }}"
                                             class="text-primary-600">{{ $level->level_name }}</a></td>
                                     <td>{{ $level->short_name }}</td>
 

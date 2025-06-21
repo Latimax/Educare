@@ -5,21 +5,47 @@ namespace App\Http\Controllers;
 use App\Mail\ContactFormSubmission;
 use App\Mail\QuoteSubmission;
 use App\Models\Admin;
+use App\Models\ClassModel;
+use App\Models\Level;
+use App\Models\SchoolInfo;
 use App\Models\SiteInfo;
+use App\Models\Staff;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
-global $siteinfo;
-$siteinfo = SiteInfo::first();
-
 class HomeController extends Controller
 {
+
+        /**
+     * Shared data for all front pages
+     */
+    private function getPageData(): array
+    {
+        return [
+            'schoolinfo'    => SchoolInfo::first(),
+            'totalStudents' => Student::count(),
+            'staffs'        => Staff::paginate(12),
+            'levels'        => Level::all(),
+            'classes'       => ClassModel::all(),
+        ];
+    }
+
+
+    public function index()
+    {
+
+        return view('front.pages.home', $this->getPageData());
+    }
+
     public function contact()
     {
-        // Access SiteInfo model directly in the method
-        $siteinfo = SiteInfo::first();
-       // return view('front.pages.contact', compact('siteinfo'));
+        $schoolinfo = SchoolInfo::first(); // Gets the first row of school info
+
+
+        return view('front.pages.contact', compact(
+            'schoolinfo'));
     }
 
     public function contactSend(Request $request)
@@ -58,65 +84,102 @@ class HomeController extends Controller
         $adminEmail = Admin::find(1)->email;
 
         // Send the email to the recipient (you can add dynamic email addresses or use a fixed one)
-      //  Mail::to($adminEmail)->send(new ContactFormSubmission($data));
+        //  Mail::to($adminEmail)->send(new ContactFormSubmission($data));
 
         // Redirect back with a success message
         return back()->with('success', 'Your message has been sent successfully!');
     }
 
-    public function about()
+
+  public function about()
     {
-        // Access SiteInfo model directly in the method
-        $siteinfo = SiteInfo::first();
-      //  return view('front.pages.about', compact('siteinfo'));
+        return view('front.pages.about', $this->getPageData());
     }
 
-    public function leadSubmit(Request $request)
+    public function admission()
     {
-        // Validate the incoming request
-        $validated = $request->validate([
-            'fullname' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'mobile_number' => 'required|regex:/^(\+?\d{1,4}[\s-]?)?(\(?\d{1,4}\)?[\s-]?\d{1,4}[\s-]?\d{1,9})$/',
-        ]);
-
-        // Return a success response instead of redirecting
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Form submitted successfully!',
-            'data' => $validated,
-        ]);
+        return view('front.pages.admission', $this->getPageData());
     }
 
-    public function quoteRequest(Request $request)
-{
-    // Validate the form input
-    $request->validate([
-        'fullname' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'mobile' => 'required|string|max:20',
-        'message' => 'required|string|max:1000',
-    ]);
+    public function classes()
+    {
+        return view('front.pages.classes', $this->getPageData());
+    }
+
+    public function faqs()
+    {
+        return view('front.pages.faqs', $this->getPageData());
+    }
+
+    public function gallery()
+    {
+
+        // $galleryItems = collect([
+        //     (object)[
+        //         'title' => '',
+        //         'image' => '',
+        //         'categories' => '',
+        //     ],
+        //     (object)[
+        //         'title' => 'Cultural Day Performance',
+        //         'image' => 'gallery/cultural_day.jpg',
+        //         'categories' => 'cultural',
+        //     ],
+        //     (object)[
+        //         'title' => 'Abdullahi Musa at Football Match',
+        //         'image' => 'gallery/football.jpg',
+        //         'categories' => 'students sports',
+        //     ],
+        //     (object)[
+        //         'title' => 'Funmilayo in Library',
+        //         'image' => 'gallery/library.jpg',
+        //         'categories' => 'students facilities',
+        //     ],
+        //     (object)[
+        //         'title' => 'Emeka Nwosu in Debate Club',
+        //         'image' => 'gallery/debate.jpg',
+        //         'categories' => 'students',
+        //     ],
+        //     (object)[
+        //         'title' => 'Aisha Bello at Annual Sports Day',
+        //         'image' => 'gallery/sports_day.jpg',
+        //         'categories' => 'sports',
+        //     ],
+        //     (object)[
+        //         'title' => 'Tunde Olatunji in Computer Lab',
+        //         'image' => 'gallery/computer_lab.jpg',
+        //         'categories' => 'students facilities',
+        //     ],
+        //     (object)[
+        //         'title' => 'Yoruba Cultural Festival',
+        //         'image' => 'gallery/yoruba_festival.jpg',
+        //         'categories' => 'cultural',
+        //     ],
+        //     (object)[
+        //         'title' => 'Students in Classroom',
+        //         'image' => 'gallery/classroom.jpg',
+        //         'categories' => 'students',
+        //     ],
+        // ])->paginate(6);
+        $galleryItems = [];
 
 
-        // Access SiteInfo model directly in the method
-        $siteinfo = SiteInfo::first();
+        return view('front.pages.gallery', $this->getPageData(), compact('galleryItems') );
+    }
 
-        $data = [
-            'fullname' => $request->fullname,
-            'mobile' => $request->mobile,
-            'email' => $request->email,
-            'message' => $request->message,
-        ];
+    public function specialClass()
+    {
+        return view('front.pages.special-class', $this->getPageData());
+    }
 
-        //Admin Email
-        $adminEmail = Admin::find(1)->email;
+    public function teachers()
+    {
+        return view('front.pages.teachers', $this->getPageData());
+    }
 
-        // Send the email to the recipient (you can add dynamic email addresses or use a fixed one)
-      //  Mail::to($adminEmail)->send(new QuoteSubmission($data));
-
-    // Redirect with a success message
-    return redirect()->back()->with('success', 'Your quote request has been sent successfully!');
-}
+    public function testimonials()
+    {
+        return view('front.pages.testimonials', $this->getPageData());
+    }
 
 }

@@ -11,6 +11,7 @@ class ClassModel extends Model
 
     protected $fillable = [
         'class_name',
+        'rank',
         'section',
         'class_teacher_id',
         'status',

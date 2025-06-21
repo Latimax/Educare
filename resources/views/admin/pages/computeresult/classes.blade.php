@@ -78,7 +78,7 @@
                                             <label class="form-check-label">{{ $index + 1 }}</label>
                                         </div>
                                     </td>
-                                    <td><a href="{{ $class->class_name }}"
+                                    <td><a href="{{ route('admin.studentresults.filter', ['id' => $class->id ]) }}"
                                             class="text-primary-600">{{ $class->class_name }}</a></td>
 
                                     @if ($class->staff)

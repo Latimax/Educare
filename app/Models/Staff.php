@@ -29,4 +29,8 @@ class Staff extends Model
         'employment_date',
         'subject_specialty',
     ];
+
+    public function department(){
+        return $this->belongsTo(Level::class, 'department');
+    }
 }

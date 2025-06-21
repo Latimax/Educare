@@ -62,6 +62,7 @@
                                 <th scope="col">Class Name</th>
                                 <th scope="col">Level</th>
                                 <th scope="col">Class Teacher</th>
+                                <th scope="col">Rank</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                             </tr>
@@ -75,8 +76,7 @@
                                             <label class="form-check-label">{{ $index + 1 }}</label>
                                         </div>
                                     </td>
-                                    <td><a href="{{ $class->class_name }}"
-                                            class="text-primary-600">{{ $class->class_name }}</a></td>
+                                    <td>{{ $class->class_name }}</td>
 
                                     <td>{{ $class->level->level_name }}</td>
                                     @if ($class->staff)
@@ -84,6 +84,7 @@
                                     @else
                                         <td class="text-danger-600">N/A</td>
                                     @endif
+                                    <td>{{ $class->rank ?? "N/A" }}</td>
                                     <td>
                                         @if ($class->status == 'active')
                                             <span class="badge bg-success-100 text-success-600">Active</span>

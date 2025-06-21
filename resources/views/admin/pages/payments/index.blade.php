@@ -91,7 +91,9 @@
                                                 <iconify-icon icon="carbon:overflow-menu-horizontal"
                                                     class="text-xl"></iconify-icon>
                                             </button>
-                                            <ul class="dropdown-menu" data-popper-placement="top-start" data-popper-reference-hidden="" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(0px, -36px, 0px);">
+                                            <ul class="dropdown-menu" data-popper-placement="top-start"
+                                                data-popper-reference-hidden=""
+                                                style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(0px, -36px, 0px);">
                                                 <li>
                                                     <a href="{{ route('admin.payments.edit', $payment->id) }}"
                                                         class="dropdown-item d-flex align-items-center gap-1 text-primary">
@@ -100,8 +102,9 @@
                                                     </a>
                                                 </li>
 
-                                                 <li>
-                                                    <a href="{{ route('admin.payments.edit', $payment->id) }}"
+                                                <li>
+                                                    <a href="#"
+                                                        onclick="openPrintWindow('{{ route('admin.payments.print', $payment->id) }}')"
                                                         class="dropdown-item d-flex align-items-center gap-1 text-secondary">
                                                         <iconify-icon icon="fluent:print-20-regular"
                                                             class="text-lg"></iconify-icon>
@@ -182,4 +185,12 @@
             });
         });
     </script>
+    <script>
+    function openPrintWindow(url) {
+        const printWindow = window.open(url, '_blank', 'width=900,height=600');
+        if (!printWindow) {
+            alert('Please allow popups for this site.');
+        }
+    }
+</script>
 @endpush

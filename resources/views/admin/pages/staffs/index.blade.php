@@ -70,7 +70,7 @@
                                         <img src="{{ asset($imgpath.'default-avatar.png') }}" alt="default" width="50" height="50" class="rounded-circle">
                                     @endif
                                 </td>
-                                <td>{{ $staff->fullname }}</td>
+                                <td><a href="{{ route('admin.staffs.show', $staff->id) }}" class="text-primary-600"> {{ $staff->fullname }} </a> </td>
                                 <td>{{ $staff->email }}</td>
                                 <td>{{ $staff->phone }}</td>
                                 <td>{{ $staff->position }}</td>
