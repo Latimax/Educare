@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\ParentMiddleware;
+use App\Http\Middleware\StaffMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -22,12 +23,18 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->name('parent.')
                 ->group(base_path('routes/parent.php'));
 
+                Route::middleware('web')
+                ->prefix('staff')
+                ->name('staff.')
+                ->group(base_path('routes/staff.php'));
+
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => AdminMiddleware::class, //Register the AdminMiddleware
             'parent' => ParentMiddleware::class, //Register the ParentMiddleware
+            'staff' => StaffMiddleware::class, //Register the StaffMiddleware
         ]);
 
         $middleware->redirectGuestsTo(function (Illuminate\Http\Request $request) {
@@ -36,9 +43,14 @@ return Application::configure(basePath: dirname(__DIR__))
                 return route('admin.login');
             }
 
-            // If the route name matches 'parent.*', redirect to admin login
+            // If the route name matches 'parent.*', redirect to parent login
             if ($request->routeIs('parent.*') || $request->is('parent/*')) {
                 return route('parent.login');
+            }
+
+             // If the route name matches 'staff.*', redirect to staff login
+            if ($request->routeIs('staff.*') || $request->is('staff/*')) {
+                return route('staff.login');
             }
 
             // Default redirect for other guests

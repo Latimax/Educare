@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Staff extends Model
+class Staff extends Authenticatable
 {
+    use HasFactory, Notifiable;
 
     // Table name (optional, if you want to use a custom table name)
     protected $table = 'staffs';
@@ -30,7 +34,8 @@ class Staff extends Model
         'subject_specialty',
     ];
 
-    public function department(){
+    public function department()
+    {
         return $this->belongsTo(Level::class, 'department');
     }
 }

@@ -16,6 +16,10 @@ class Authenticate extends Middleware
             return route('parent.login');
         }
 
+        if ($request->is('staff') || $request->routeIs('staff.*')) {
+            return route('staff.login');
+        }
+
         return route('login');
     }
 }
