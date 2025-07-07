@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('staff.layouts.app')
 
 @section('title', 'Create Student Result')
 
@@ -8,7 +8,7 @@
             <h6 class="fw-semibold mb-0">Student Results</h6>
             <ul class="d-flex align-items-center gap-2">
                 <li class="fw-medium">
-                    <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
+                    <a href="{{ route('staff.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
                         <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
                         Dashboard
                     </a>
@@ -21,7 +21,7 @@
         <div class="card basic-data-table">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <h5 class="card-title mb-0">Create Student Result</h5>
-                <a href="{{ route('admin.studentresults.filter', $class->id) }}"
+                <a href="{{ route('staff.studentresults.filter', $class->id) }}"
                     class="btn btn-outline-primary-600 radius-8 px-20 py-11 d-flex align-items-center gap-2">
                     <iconify-icon icon="icons8:left-round" class="text-xl"></iconify-icon> Back
                 </a>
@@ -54,7 +54,7 @@
             @endif
 
             <div class="card-body">
-                <form action="{{ route('admin.studentresults.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('staff.studentresults.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- First Row: Class, Student, Total Time School Open, Total Time Present -->
@@ -539,7 +539,7 @@
             const studentId = $(this).val();
             if (studentId) {
                 $.ajax({
-                    url: '{{ url('/admin/studentresults/compute/getscores') }}/' + studentId,
+                    url: '{{ url('/staff/studentresults/compute/getscores') }}/' + studentId,
                     method: 'GET',
                     success: function(response) {
                         // Reset all fields

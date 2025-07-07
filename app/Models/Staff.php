@@ -38,4 +38,12 @@ class Staff extends Authenticatable
     {
         return $this->belongsTo(Level::class, 'department');
     }
+
+     public function departmentLevel()
+    {
+        return $this->belongsTo(Level::class, 'department');
+    }
+
 }
+
+

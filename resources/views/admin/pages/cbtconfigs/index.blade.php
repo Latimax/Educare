@@ -255,6 +255,19 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="col-sm-4">
+                                            <div class="mb-20">
+                                                <label class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                    Add Minutes to Ongoing CBT
+                                                </label>
+                                                <div class="form-check form-switch d-flex align-items-center gap-2">
+                                                    <input type="number" name="add_minutes" id="add_minutes"
+                                                    class="form-control radius-8"
+                                                    value="{{ old('add_minutes', 0) }}" min="0" max="{{ $cbt_config->total_time }}">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-center gap-3">
                                         <a href="{{ route('admin.dashboard') }}"

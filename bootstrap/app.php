@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CheckActiveCbtTest;
 use App\Http\Middleware\ParentMiddleware;
 use App\Http\Middleware\StaffMiddleware;
+use App\Http\Middleware\StudentMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -28,6 +30,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->name('staff.')
                 ->group(base_path('routes/staff.php'));
 
+                 Route::middleware('web')
+                ->prefix('student')
+                ->name('student.')
+                ->group(base_path('routes/student.php'));
+
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
@@ -35,6 +42,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => AdminMiddleware::class, //Register the AdminMiddleware
             'parent' => ParentMiddleware::class, //Register the ParentMiddleware
             'staff' => StaffMiddleware::class, //Register the StaffMiddleware
+            'student' => StudentMiddleware::class, //Register the StudentMiddleware
+            'cbt' => CheckActiveCbtTest::class, //Register the CheckActiveCbtTest middleware
         ]);
 
         $middleware->redirectGuestsTo(function (Illuminate\Http\Request $request) {
@@ -51,6 +60,11 @@ return Application::configure(basePath: dirname(__DIR__))
              // If the route name matches 'staff.*', redirect to staff login
             if ($request->routeIs('staff.*') || $request->is('staff/*')) {
                 return route('staff.login');
+            }
+
+            // If the route name matches 'staff.*', redirect to student login
+            if ($request->routeIs('student.*') || $request->is('student/*')) {
+                return route('student.login');
             }
 
             // Default redirect for other guests

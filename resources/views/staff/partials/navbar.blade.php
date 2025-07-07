@@ -72,14 +72,23 @@
                 <div class="dropdown">
                     <button class="d-flex justify-content-center align-items-center rounded-circle" type="button"
                         data-bs-toggle="dropdown">
-                        <img src="{{ asset($imgpath.'admin.jpg') }}" alt="image"
-                            class="w-40-px h-40-px object-fit-cover rounded-circle">
+                        @php
+                            $staff = Auth::guard('staff')->user();
+                        @endphp
+                        @if ($staff->photo)
+                            <img src="{{ asset('storage/' . $staff->photo) }}" alt="photo"
+                                class="w-40-px h-40-px object-fit-cover rounded-circle">
+                        @else
+                            <img src="{{ asset($imgpath . 'default-avatar.png') }}" alt="default"
+                                class="w-40-px h-40-px object-fit-cover rounded-circle">
+                        @endif
                     </button>
                     <div class="dropdown-menu to-top dropdown-menu-sm">
                         <div
                             class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
                             <div>
-                                <h6 class="text-lg text-primary-light fw-semibold mb-2">{{ Auth::guard('staff')->user()->fullname }}</h6>
+                                <h6 class="text-lg text-primary-light fw-semibold mb-2">
+                                    {{ $staff->fullname }}</h6>
                                 <span class="text-secondary-light fw-medium text-sm">Admin</span>
                             </div>
                             <button type="button" class="hover-text-danger">

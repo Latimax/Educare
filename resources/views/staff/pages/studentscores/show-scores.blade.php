@@ -176,7 +176,7 @@
             });
 
             // Client-side validation for score inputs
-            $(document).on('input', '.score-input', function() {
+            $(document).on('blur', '.score-input', function() {
                 let max = parseFloat($(this).attr('data-max')) || 100;
                 let value = parseFloat($(this).val()) || 0;
                 let min = parseFloat($(this).attr('min')) || 0;

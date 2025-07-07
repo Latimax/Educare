@@ -1,4 +1,4 @@
-@extends('admin.layouts.resultpreview')
+@extends('staff.layouts.resultpreview')
 
 @section('title', 'Print Student Result')
 

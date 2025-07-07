@@ -121,6 +121,10 @@ Route::middleware(['auth:staff'])->group(function () {
     //Rank a specific class result
     Route::get('studentresults/compute/rankall/{classId}', [ResultController::class, 'rankAll'])->name('studentresults.rankall');
 
+        //Broadsheet Print and Download
+    Route::get('broadsheet/index', [ResultController::class, 'indexBsheet'])->name('broadsheet.index');
+    Route::get('broadsheet/{id}/print', [ResultController::class, 'printBsheet'])->name('broadsheet.print');
+
 
     // Show Students bResults for a specific Class ID
     Route::get('studentresults/view/class/{id?}', [ResultController::class, 'students'])->name('studentresults.filter');

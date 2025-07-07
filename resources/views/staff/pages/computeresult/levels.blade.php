@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('staff.layouts.app')
 
 @section('title', 'Compute Result | All Levels')
 
@@ -12,7 +12,7 @@
             <h6 class="fw-semibold mb-0">Compute Result</h6>
             <ul class="d-flex align-items-center gap-2">
                 <li class="fw-medium">
-                    <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
+                    <a href="{{ route('staff.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
                         <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
                         Dashboard
                     </a>
@@ -66,14 +66,14 @@
                                             <label class="form-check-label">{{ $index + 1 }}</label>
                                         </div>
                                     </td>
-                                    <td><a href="{{ route('admin.studentresults.classes', $level->id) }}"
+                                    <td><a href="{{ route('staff.studentresults.classes', $level->id) }}"
                                             class="text-primary-600">{{ $level->level_name }}</a></td>
                                     <td>{{ $level->short_name }}</td>
 
 
                                     <td class="d-flex gap-2 align-items-center">
                                         {{-- Edit Button --}}
-                                        <a href="{{ route('admin.studentresults.classes', $level->id) }}"
+                                        <a href="{{ route('staff.studentresults.classes', $level->id) }}"
                                             class="btn btn-outline-primary-600 radius-8 text-primary-600 d-inline-flex align-items-center justify-content-center gap-1">
                                             <iconify-icon icon="akar-icons:edit" class="text-xl"></iconify-icon>
                                             <span>View Classes [{{ count($level->classes) }}]</span>

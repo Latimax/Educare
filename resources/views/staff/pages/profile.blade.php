@@ -1,8 +1,8 @@
 {{-- resources/views/admin/pages/profile.blade.php --}}
 
-@extends('admin.layouts.app')
+@extends('staff.layouts.app')
 
-@section('title', 'Site Information')
+@section('title', 'Staff Profile')
 
 @php
     $imgpath = 'storage/front/images/';
@@ -17,16 +17,16 @@
 
     <div class="dashboard-main-body">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-            <h6 class="fw-semibold mb-0">View Profile</h6>
+            <h6 class="fw-semibold mb-0">View Staff Profile</h6>
             <ul class="d-flex align-items-center gap-2">
                 <li class="fw-medium">
-                    <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
+                    <a href="{{ route('staff.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
                         <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
                         Dashboard
                     </a>
                 </li>
                 <li>-</li>
-                <li class="fw-medium">View Profile</li>
+                <li class="fw-medium">View Staff Profile</li>
             </ul>
         </div>
 
@@ -46,40 +46,71 @@
         <div class="row gy-4">
             <div class="col-lg-4">
                 <div class="user-grid-card position-relative border overflow-hidden bg-base h-100">
-                    <img src="{{ asset('front/images/about/about-company.jpg') }}" alt=""
-                        class="w-100 mb-12 object-fit-cover">
+                    @if ($staff->photo)
+                        <img src="{{ asset('storage/' . $staff->photo) }}" alt=""
+                            class="w-100 mb-12 object-fit-cover">
+                    @else
+                        <img src="{{ asset($imgpath . 'default-avatar.png') }}" alt="default"
+                            class="w-100 mb-12 object-fit-cover">
+                    @endif
                     <div class="pb-24 ms-16 mb-24 me-16  mt--100">
                         <div class="text-center mt-12 border border-top-0 border-start-0 border-end-0">
-                            <h6 class="mb-0 mt-32"></h6>
-                            <span class="text-secondary-light mb-16"></span>
+                            <h6 class="mb-0 mt-32">{{ $staff->fullname }}</h6>
+                            <span class="text-secondary-light mb-16">{{ $staff->position }}</span>
                         </div>
                         <div class="mt-32">
                             <h6 class="text-xl mb-16">Personal Info</h6>
                             <ul>
                                 <li class="d-flex align-items-center gap-1 mb-12">
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Staff ID</span>
+                                    <span class="w-70 text-secondary-light fw-medium">: {{ $staff->staffId }}</span>
+                                </li>
+                                <li class="d-flex align-items-center gap-1 mb-12">
                                     <span class="w-30 text-md fw-semibold text-primary-light">Full Name</span>
-                                    <span class="w-70 text-secondary-light fw-medium">: {{ $schoolinfo->owner_name }}</span>
+                                    <span class="w-70 text-secondary-light fw-medium">: {{ $staff->fullname }}</span>
                                 </li>
                                 <li class="d-flex align-items-center gap-1 mb-12">
-                                    <span class="w-30 text-md fw-semibold text-primary-light"> Email</span>
-                                    <span class="w-70 text-secondary-light fw-medium">:{{ $schoolinfo->email }}</span>
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Email</span>
+                                    <span class="w-70 text-secondary-light fw-medium">: {{ $staff->email }}</span>
                                 </li>
                                 <li class="d-flex align-items-center gap-1 mb-12">
-                                    <span class="w-30 text-md fw-semibold text-primary-light"> Phone Number</span>
-                                    <span class="w-70 text-secondary-light fw-medium">: {{ $schoolinfo->phone }}</span>
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Phone Number</span>
+                                    <span class="w-70 text-secondary-light fw-medium">: {{ $staff->phone }}</span>
                                 </li>
                                 <li class="d-flex align-items-center gap-1 mb-12">
-                                    <span class="w-30 text-md fw-semibold text-primary-light"> Department</span>
-                                    <span class="w-70 text-secondary-light fw-medium">: Administrator</span>
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Date of Birth</span>
+                                    <span class="w-70 text-secondary-light fw-medium">: {{ $staff->dob }}</span>
                                 </li>
                                 <li class="d-flex align-items-center gap-1 mb-12">
-                                    <span class="w-30 text-md fw-semibold text-primary-light"> Languages</span>
-                                    <span class="w-70 text-secondary-light fw-medium">: English</span>
+                                    <span class="w-30 text-md fw-semibold text-primary-light">State</span>
+                                    <span class="w-70 text-secondary-light fw-medium">: {{ $staff->state }}</span>
                                 </li>
-                                <li class="d-flex align-items-center gap-1">
-                                    <span class="w-30 text-md fw-semibold text-primary-light"> Bio</span>
+                                <li class="d-flex align-items-center gap-1 mb-12">
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Country</span>
+                                    <span class="w-70 text-secondary-light fw-medium">: {{ $staff->country }}</span>
+                                </li>
+                                <li class="d-flex align-items-center gap-1 mb-12">
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Gender</span>
+                                    <span class="w-70 text-secondary-light fw-medium">: {{ $staff->gender }}</span>
+                                </li>
+                                <li class="d-flex align-items-center gap-1 mb-12">
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Highest Qualification</span>
                                     <span class="w-70 text-secondary-light fw-medium">:
-                                        {{ $schoolinfo->meta_description }}.</span>
+                                        {{ $staff->highest_qualification }}</span>
+                                </li>
+                                <li class="d-flex align-items-center gap-1 mb-12">
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Position</span>
+                                    <span class="w-70 text-secondary-light fw-medium">: {{ $staff->position }}</span>
+                                </li>
+                                <li class="d-flex align-items-center gap-1 mb-12">
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Department</span>
+                                    <span class="w-70 text-secondary-light fw-medium">:
+                                        {{ $staff->departmentLevel->level_name }}</span>
+                                </li>
+                                <li class="d-flex align-items-center gap-1 mb-12">
+                                    <span class="w-30 text-md fw-semibold text-primary-light">Subject Specialty</span>
+                                    <span class="w-70 text-secondary-light fw-medium">:
+                                        {{ $staff->subject_specialty }}</span>
                                 </li>
                             </ul>
                         </div>
@@ -117,28 +148,25 @@
                                 id="pills-edit-profile" role="tabpanel" aria-labelledby="pills-edit-profile-tab"
                                 tabindex="0">
                                 <h6 class="text-md text-primary-light mb-16">Profile Image</h6>
-                                <!-- Upload Image Start -->
-                                <!-- Upload Image End -->
-                                <form action="{{ route('admin.profile') }}" method="POST" enctype="multipart/form-data">
-
+                                <form action="{{ route('staff.profile') }}" method="POST"
+                                    enctype="multipart/form-data">
                                     <div class="mb-24 mt-16">
                                         <div class="avatar-upload"
-                                            style="background-image: url('{{ asset($imgpath . 'admin.jpg') }}'); background-size: cover; background-position: center; height: 150px; width: 150px; border-radius: 50%;">
+                                            style="background-image: url('{{ asset('storage/' . $staff->photo) }}'); background-size: cover; background-position: center; height: 150px; width: 150px; border-radius: 50%;">
                                             <div class="position-absolute bottom-0 end-0 me-24 mt-16 z-1 cursor-pointer">
-                                                <input type='file' id="profile_image" name="profile_image"
+                                                <input type='file' id="profile_image" name="photo"
                                                     accept=".png, .jpg, .jpeg" hidden>
                                                 <label for="profile_image"
                                                     class="w-32-px h-32-px d-flex justify-content-center align-items-center bg-primary-50 text-primary-600 border border-primary-600 bg-hover-primary-100 text-lg rounded-circle">
-                                                    <iconify-icon icon="solar:camera-outline" class="icon"></iconify-icon>
+                                                    <iconify-icon icon="solar:camera-outline"
+                                                        class="icon"></iconify-icon>
                                                 </label>
-
                                             </div>
                                             <div class="avatar-preview">
                                                 <div id="imagePreview"></div>
                                             </div>
                                         </div>
-
-                                        @error('profile_image')
+                                        @error('photo')
                                             <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -147,15 +175,15 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="mb-20">
-                                                <label for="name"
+                                                <label for="fullname"
                                                     class="form-label fw-semibold text-primary-light text-sm mb-8">
                                                     Full Name <span class="text-danger-600">*</span>
                                                 </label>
-                                                <input type="text" name="name"
-                                                    class="form-control radius-8 @error('name') is-invalid @enderror"
-                                                    id="name" placeholder="Enter Full Name"
-                                                    value="{{ old('name', $admin->name ?? '') }}">
-                                                @error('name')
+                                                <input type="text" name="fullname"
+                                                    class="form-control radius-8 @error('fullname') is-invalid @enderror"
+                                                    id="fullname" placeholder="Enter Full Name"
+                                                    value="{{ old('fullname', $staff->fullname ?? '') }}">
+                                                @error('fullname')
                                                     <span class="text-danger text-sm">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -170,17 +198,122 @@
                                                 <input type="email" name="email"
                                                     class="form-control radius-8 @error('email') is-invalid @enderror"
                                                     id="email" placeholder="Enter email address"
-                                                    value="{{ old('email', $admin->email ?? '') }}">
+                                                    value="{{ old('email', $staff->email ?? '') }}">
                                                 @error('email')
                                                     <span class="text-danger text-sm">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
 
+                                        <div class="col-sm-6">
+                                            <div class="mb-20">
+                                                <label for="phone"
+                                                    class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                    Phone Number
+                                                </label>
+                                                <input type="text" name="phone"
+                                                    class="form-control radius-8 @error('phone') is-invalid @enderror"
+                                                    id="phone" placeholder="Enter Phone Number"
+                                                    value="{{ old('phone', $staff->phone ?? '') }}">
+                                                @error('phone')
+                                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="mb-20">
+                                                <label for="dob"
+                                                    class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                    Date of Birth
+                                                </label>
+                                                <input type="date" name="dob"
+                                                    class="form-control radius-8 @error('dob') is-invalid @enderror"
+                                                    id="dob" placeholder="Select Date of Birth"
+                                                    value="{{ old('dob', $staff->dob ?? '') }}">
+                                                @error('dob')
+                                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="mb-20">
+                                                <label for="state"
+                                                    class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                    State
+                                                </label>
+                                                <input type="text" name="state"
+                                                    class="form-control radius-8 @error('state') is-invalid @enderror"
+                                                    id="state" placeholder="Enter State"
+                                                    value="{{ old('state', $staff->state ?? '') }}">
+                                                @error('state')
+                                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="mb-20">
+                                                <label for="country"
+                                                    class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                    Country
+                                                </label>
+                                                <input type="text" name="country"
+                                                    class="form-control radius-8 @error('country') is-invalid @enderror"
+                                                    id="country" placeholder="Enter Country"
+                                                    value="{{ old('country', $staff->country ?? '') }}">
+                                                @error('country')
+                                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="mb-20">
+                                                <label for="gender"
+                                                    class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                    Gender
+                                                </label>
+                                                <select name="gender"
+                                                    class="form-control radius-8 @error('gender') is-invalid @enderror"
+                                                    id="gender">
+                                                    <option value="">Select Gender</option>
+                                                    <option value="Male"
+                                                        {{ old('gender', $staff->gender ?? '') == 'male' ? 'selected' : '' }}>
+                                                        Male</option>
+                                                    <option value="Female"
+                                                        {{ old('gender', $staff->gender ?? '') == 'female' ? 'selected' : '' }}>
+                                                        Female</option>
+                                                    <option value="Other"
+                                                        {{ old('gender', $staff->gender ?? '') == 'other' ? 'selected' : '' }}>
+                                                        Other</option>
+                                                </select>
+                                                @error('gender')
+                                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="mb-20">
+                                                <label for="subject_specialty"
+                                                    class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                    Subject Specialty
+                                                </label>
+                                                <input type="text" name="subject_specialty"
+                                                    class="form-control radius-8 @error('subject_specialty') is-invalid @enderror"
+                                                    id="subject_specialty" placeholder="Enter Subject Specialty"
+                                                    value="{{ old('subject_specialty', $staff->subject_specialty ?? '') }}">
+                                                @error('subject_specialty')
+                                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-center gap-3">
-                                        <a href="{{ route('admin.dashboard') }}"
+                                        <a href="{{ route('staff.dashboard') }}"
                                             class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">
                                             Cancel
                                         </a>
@@ -192,7 +325,7 @@
                                 </form>
                             </div>
 
-                            <form action="{{ route('admin.change-password') }}" method="POST">
+                            <form action="{{ route('staff.change-password') }}" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <div class="tab-pane fade {{ $activeTab == 'change' ? 'show active' : '' }}"

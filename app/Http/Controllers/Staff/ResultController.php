@@ -15,6 +15,7 @@ use App\Models\StudentScore;
 use App\Models\Subject;
 use Barryvdh\DomPDF\PDF as DomPDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ResultController extends Controller
@@ -25,62 +26,88 @@ class ResultController extends Controller
     public function index()
     {
         $schoolinfo = SchoolInfo::first();
-        $levels =  Level::all();
+        $staffId = Auth::guard('staff')->user()->id;
 
-        return view('admin.pages.computeresult.levels', compact('schoolinfo', 'levels'));
+        // Get classes either taught or class-teachered by the staff
+        $classes = ClassModel::where('class_teacher_id', $staffId)
+            ->get()
+            ->unique('id')     // Remove duplicates by class id
+            ->values();        // Reset array keys
+
+        return view('staff.pages.computeresult.classes', compact('classes', 'schoolinfo'));
     }
+
 
     public function showClasses($id = null)
     {
-        // If an ID is provided, filter classes by that ID
-        if ($id) {
-            $classes = ClassModel::where('level_id', $id)->orderBy('level_id', 'ASC')->orderBy('class_name', 'ASC')->get();
-        } else {
-            // If no ID is provided, get all classes
-            $classes = ClassModel::orderBy('level_id', 'ASC')->orderBy('class_name', 'ASC')->get();
-        }
-
-
-        $schoolinfo = SchoolInfo::first();
-
-        return view('admin.pages.computeresult.classes', compact('schoolinfo', 'classes'));
+        $this->index();
     }
 
     public function students($classId = null)
     {
-
         $schoolinfo = SchoolInfo::first();
+        $staffId = Auth::guard('staff')->user()->id;
 
+        $classId = $classId ?? 1; // Default to first class if none is provided
+
+        // Check if staff is the class teacher
+        $class = ClassModel::find($classId);
+        if (!$class) {
+            return redirect()->back()->with('error', 'Class not found.');
+        }
+
+        if ($class->class_teacher_id !== $staffId) {
+            return abort(403, 'You are not authorized to view this class results.');
+        }
+
+        // Fetch student results for this class
         $studentResults = StudentResult::where('class_id', $classId)->get();
 
-        $classId = $classId ?? 1; // Default to the first class if no ID is provided
-
-        return view('admin.pages.computeresult.index', compact('schoolinfo', 'studentResults', 'classId'));
+        return view('staff.pages.computeresult.index', compact('schoolinfo', 'studentResults', 'classId'));
     }
+
 
 
     public function createNew($classId)
     {
         $schoolinfo = SchoolInfo::first();
+        $staffId = Auth::guard('staff')->user()->id;
 
         $class = ClassModel::find($classId);
+        if (!$class) {
+            return redirect()->back()->with('error', 'Class not found.');
+        }
+
+        // Authorization check: is this staff the class teacher?
+        if ($class->class_teacher_id !== $staffId) {
+            return abort(403, 'You are not authorized to enter results for this class.');
+        }
+
         $subjects = Subject::where('level_id', $class->level_id)
-            ->where("status", 'active')->get();
+            ->where("status", 'active')
+            ->get();
 
+        $level_config = Level::find($class->level_id);
 
-        $level_config = Level::where('id', $class->level_id)->first();
-
-        // Fetch the class from the database
+        // Get students in the class without existing results
         $students = Student::where('class_id', $classId)
             ->whereDoesntHave('results')
             ->get();
 
-        $comments = ResultComment::all()->load('grade');
-
+        $comments = ResultComment::with('grade')->get();
         $grades = Grade::all();
 
-        return view('admin.pages.computeresult.create', compact('schoolinfo', 'class', 'students', 'subjects', 'comments', 'grades', 'level_config'));
+        return view('staff.pages.computeresult.create', compact(
+            'schoolinfo',
+            'class',
+            'students',
+            'subjects',
+            'comments',
+            'grades',
+            'level_config'
+        ));
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -179,7 +206,7 @@ class ResultController extends Controller
                 'position' => "",
             ]);
 
-            return redirect()->route('admin.studentresults.filter', $request->input('class_id'))->with('success', 'Student result created successfully.');
+            return redirect()->route('staff.studentresults.filter', $request->input('class_id'))->with('success', 'Student result created successfully.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('success', 'Failed to create student result: ' . $e->getMessage())
@@ -321,7 +348,7 @@ class ResultController extends Controller
 
         $grades = Grade::all();
 
-        return view('admin.pages.computeresult.edit', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'result', 'level_config'));
+        return view('staff.pages.computeresult.edit', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'result', 'level_config'));
     }
 
     public function print($resultId)
@@ -342,10 +369,10 @@ class ResultController extends Controller
 
         $grades = Grade::all();
 
-        return view('admin.pages.computeresult.printpreview', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'result', 'level_config'));
+        return view('staff.pages.computeresult.printpreview', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'result', 'level_config'));
     }
 
-     public function printBsheet($classId)
+    public function printBsheet($classId)
     {
 
         $schoolinfo = SchoolInfo::first();
@@ -362,7 +389,7 @@ class ResultController extends Controller
 
         $grades = Grade::all();
 
-        return view('admin.pages.computeresult.printbroadsheetpreview', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'results', 'level_config'));
+        return view('staff.pages.computeresult.printbroadsheetpreview', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'results', 'level_config'));
     }
 
 
@@ -385,15 +412,14 @@ class ResultController extends Controller
         $grades = Grade::all();
 
 
-        // $pdf = $pdf->loadView('admin.pages.computeresult.printpreview', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'result', 'level_config'));
+        // $pdf = $pdf->loadView('staff.pages.computeresult.printpreview', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'result', 'level_config'));
 
         // //return $pdf->download("result_{$result->id}.pdf");
 
         // //To display in browser instead of download:
         // return $pdf->stream("result_{$result->id}.pdf");
 
-        return view('admin.pages.computeresult.pdfprint', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'result', 'level_config'));
-
+        return view('staff.pages.computeresult.pdfprint', compact('schoolinfo', 'class', 'comments', 'grades', 'subjects', 'result', 'level_config'));
     }
 
     /**
@@ -497,7 +523,7 @@ class ResultController extends Controller
                 'position' => "",
             ]);
 
-            return redirect()->route('admin.studentresults.filter', $request->input('class_id'))
+            return redirect()->route('staff.studentresults.filter', $request->input('class_id'))
                 ->with('success', 'Student result updated successfully.');
         } catch (\Exception $e) {
             return redirect()->back()

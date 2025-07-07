@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Models\SchoolInfo;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -100,6 +101,9 @@ class AuthController extends Controller
     {
         $staff = Auth::guard('staff')->user();
         $schoolinfo = SchoolInfo::first();
+
+        $staff->load('department');
+
         // Set default active tab to 'profile'
         $activeTab = 'profile';
         return view('staff.pages.profile', compact('staff', 'schoolinfo', 'activeTab'));
@@ -113,32 +117,40 @@ class AuthController extends Controller
      */
     public function updateProfile(Request $request)
     {
+
         $staff = Auth::guard('staff')->user();
 
-        // Validate input data including optional phone and profile_image
+        // Validate input data based on form fields
         $validatedData = $request->validate([
-            'name'          => 'required|string|max:255',
-            'email'         => 'required|string|email|max:255|unique:staffs,email,' . $staff->id,
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'fullname'         => 'required|string|max:255',
+            'email'            => 'required|string|email|max:255|unique:staffs,email,' . $staff->id,
+            'phone'            => 'nullable|string|max:20',
+            'dob'              => 'nullable|date',
+            'state'            => 'nullable|string|max:100',
+            'country'          => 'nullable|string|max:100',
+            'gender'           => 'nullable|in:Male,Female,Other',
+            'subject_specialty' => 'nullable|string|max:255',
+            'photo'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Handle profile image upload if a new image is provided
-        if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
+        // Handle profile photo upload if provided
+        if ($request->hasFile('photo')) {
+            // Delete old photo if it exists
+            if ($staff->photo && Storage::disk('public')->exists($staff->photo)) {
+                Storage::disk('public')->delete($staff->photo);
+            }
 
-            // Store the file temporarily in the storage folder (you can choose any temporary name)
-            $path = $file->store('front/images', 'public');
-
-            $filename = 'staff.jpg';
-
-            // Rename the file to 'staff.png'
-            Storage::disk('public')->move($path, 'front/images/' . $filename);
+            // Store the new photo
+            $file = $request->file('photo');
+            $filename = 'staff_' . $staff->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('staff/photos', $filename, 'public');
+            $validatedData['photo'] = $path;
         }
 
         // Update the staff record with the validated data
-        $staff->update($validatedData);
+        Staff::where('id', $staff->id )->update($validatedData);
 
-        // Return back with the profile tab active
+        // Return back with success message and active tab
         return redirect()->back()
             ->with(['success' => 'Profile updated successfully.', 'activeTab' => 'profile']);
     }
@@ -157,7 +169,7 @@ class AuthController extends Controller
 
         $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|string|min:8|confirmed',
+            'new_password' => 'required|string|min:4|confirmed',
         ]);
 
         if (!Hash::check($request->current_password, $staff->password)) {

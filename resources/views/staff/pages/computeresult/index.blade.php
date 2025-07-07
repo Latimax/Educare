@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('staff.layouts.app')
 
 @section('title', 'Students | All Students')
 
@@ -19,7 +19,7 @@
             <h6 class="fw-semibold mb-0">Students</h6>
             <ul class="d-flex align-items-center gap-2">
                 <li class="fw-medium">
-                    <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
+                    <a href="{{ route('staff.dashboard') }}" class="d-flex align-items-center gap-1 hover-text-primary">
                         <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
                         Dashboard
                     </a>
@@ -34,25 +34,25 @@
                 <h5 class="card-title mb-0">{{ $className ?? 'All Students' }}</h5>
 
                 <div class="d-flex gap-2 flex-wrap">
-                    <a href="{{ route('admin.studentresults.classes', $classId) }}"
+                    <a href="{{ route('staff.studentresults.classes', $classId) }}"
                         class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
                         <iconify-icon icon="ic:round-arrow-back" class="text-sm"></iconify-icon>
                         Back
                     </a>
 
-                    <a href="{{ route('admin.studentresults.rankall', $classId) }}"
+                    <a href="{{ route('staff.studentresults.rankall', $classId) }}"
                         class="btn btn-outline-warning btn-sm d-flex align-items-center gap-1">
                         <iconify-icon icon="mdi:trophy-outline" class="text-sm"></iconify-icon>
                         Rank All
                     </a>
 
-                    <a href="{{ route('admin.broadsheet.print', $classId) }}" target="_blank"
+                    <a href="{{ route('staff.broadsheet.print', $classId) }}" target="_blank"
                         class="btn btn-outline-info btn-sm d-flex align-items-center gap-1">
                         <iconify-icon icon="foundation:results-demographics" class="text-sm"></iconify-icon>
                         Broadsheet
                     </a>
 
-                    <a href="{{ route('admin.studentresults.compute.create', $classId) }}"
+                    <a href="{{ route('staff.studentresults.compute.create', $classId) }}"
                         class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1">
                         <iconify-icon icon="mdi:plus-box-outline" class="text-sm"></iconify-icon>
                         Add New
@@ -120,7 +120,7 @@
                                                 {{-- Edit --}}
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-1"
-                                                        href="{{ route('admin.studentresults.edit', $result->id) }}">
+                                                        href="{{ route('staff.studentresults.edit', $result->id) }}">
                                                         <iconify-icon icon="mdi:pencil-outline"
                                                             class="text-md"></iconify-icon>
                                                         Edit
@@ -129,7 +129,7 @@
 
                                                 {{-- Delete --}}
                                                 <li>
-                                                    <form action="{{ route('admin.studentresults.destroy', $result->id) }}"
+                                                    <form action="{{ route('staff.studentresults.destroy', $result->id) }}"
                                                         method="POST" class="form-delete">
                                                         @csrf
                                                         @method('DELETE')
@@ -145,7 +145,7 @@
                                                 {{-- Print --}}
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-1" href="#"
-                                                        onclick="printResult('{{ route('admin.studentresults.print', $result->id) }}'); return false;">
+                                                        onclick="printResult('{{ route('staff.studentresults.print', $result->id) }}'); return false;">
                                                         <iconify-icon icon="mdi:printer-outline"
                                                             class="text-md"></iconify-icon>
                                                         Print
@@ -154,7 +154,7 @@
                                                 {{-- Download PDF --}}
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-1"
-                                                        href="{{ route('admin.studentresults.download', $result->id) }}">
+                                                        href="{{ route('staff.studentresults.download', $result->id) }}">
                                                         <iconify-icon icon="mdi:file-pdf-box"
                                                             class="text-md"></iconify-icon>
                                                         PDF

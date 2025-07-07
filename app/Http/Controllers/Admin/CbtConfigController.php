@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CbtAttempt;
 use App\Models\Level;
 use App\Models\SchoolInfo;
 use App\Models\Student;
 use App\Models\Subject;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -146,7 +148,25 @@ class CbtConfigController extends Controller
             'shuffle_questions' => 'nullable|in:on,off',
             'shuffle_answers' => 'nullable|in:on,off',
             'show_correct_answers' => 'nullable|in:on,off',
+            'add_minutes' => 'nullable|integer',
         ]);
+
+
+        if (isset($validatedData['add_minutes']) && $validatedData['add_minutes'] > 0) {
+            // Find all attempts where is_submitted is false
+            $attempts = CbtAttempt::where('is_submitted', '0')->get();
+
+            $minutes = (int) $validatedData['add_minutes']; // Cast to integer
+
+            // Update start_time and end_time by adding minutes
+            foreach ($attempts as $attempt) {
+                $attempt->start_time = Carbon::parse($attempt->start_time)->addMinutes($minutes);
+                $attempt->end_time = Carbon::parse($attempt->end_time)->addMinutes($minutes);
+                $attempt->save();
+            }
+        }
+
+        unset($validatedData['add_minutes']);
 
         // Convert checkbox values to boolean
         $validatedData['shuffle_questions'] = $request->boolean('shuffle_questions');
